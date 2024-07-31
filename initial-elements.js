@@ -34,6 +34,13 @@ export const initialNodes = [
     position: { x: 300, y: 300 },
     class: 'light',
   },
+  {
+    id: '6',
+    type: 'question',
+    data: {label: 'Вопрос'},
+    position: {x: 400, y: 400},
+    class: 'light',
+  }
 ]
 
 export const initialEdges = [
