@@ -1,6 +1,6 @@
 <template>
     <div class="node-answer node">
-        <h4 class="node-title">Ответ</h4>
+        <h4 class="node-title">Ответ 2 на вопрос 3</h4>
         <input v-model="answer" class="node-input" placeholder="Да" type="text"/>
         <div class="node-licenses-wrapper">
             <div class="node-license-header">
@@ -9,16 +9,18 @@
             </div>
         </div>
         <div class="node-licenses-list">
-            <select class="node-license-select">
-                <option>MIT</option>
-                <option>Apache2</option>
-                <option>Apache3</option>
-            </select>
-            <select class="node-license-select">
-                <option value="1">1</option>
-                <option value="0">0</option>
-                <option value="null">null</option>
-            </select>
+            <div class="node-license-item">
+                <select class="node-license-select">
+                    <option>MIT</option>
+                    <option>Apache2</option>
+                    <option>Apache3</option>
+                </select>
+                <select class="node-license-select">
+                    <option value="1">1</option>
+                    <option value="0">0</option>
+                    <option value="null">null</option>
+                </select>
+            </div>
         </div>
         <button class="node-button" type="button">+ Добавить лицензию</button>
         <hr class="node-hr">

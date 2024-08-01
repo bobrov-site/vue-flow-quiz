@@ -52,7 +52,7 @@ export const initialNodes = [
     id: '8',
     type: 'result',
     data: {label: 'Результат'},
-    position: {x: 800, y: 800},
+    position: {x: 1200, y: 1200},
     class: 'light',
   }
 ]
