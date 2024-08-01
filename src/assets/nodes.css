@@ -54,6 +54,11 @@
 .node-license-item {
     display: flex;
     justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.node-license-item:last-child {
+    margin-bottom: 0;
 }
 
 .node-license-item-data {
