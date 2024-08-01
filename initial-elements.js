@@ -40,6 +40,13 @@ export const initialNodes = [
     data: {label: 'Вопрос'},
     position: {x: 400, y: 400},
     class: 'light',
+  },
+  {
+    id: '7',
+    type: 'answer',
+    data: {label: 'Ответ'},
+    position: {x: 800, y: 800},
+    class: 'light'
   }
 ]
 
