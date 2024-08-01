@@ -24,6 +24,10 @@
     border: 2px solid #7DD3FC;
 }
 
+.node-result {
+    border: 2px solid #75EDAE;
+}
+
 .node-button-green {
     color: #00C16A;
 }
@@ -40,6 +44,30 @@
     font-weight: 500;
     color: #64748B;
     text-transform: none;
+}
+
+.node-licenses-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.node-license-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.node-license-item-data {
+    color: #0F172A;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    border: 1px solid #CBD5E1;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 6px;
+    background: #FFFFFF;
 }
 
 .node-license-select {

@@ -16,6 +16,9 @@
     <template #node-answer>
       <AnswerNode />
     </template>
+    <template #node-result>
+      <ResultNode />
+    </template>
 
     <MiniMap />
 
@@ -51,6 +54,7 @@ import type { Edge, Node } from '@vue-flow/core'
 import QuestionNode from './QuestionNode.vue';
 import AnswerNode from './AnswerNode.vue';
 import Icon from '@/components/icons/Icon.vue'
+import ResultNode from './ResultNode.vue'
 
 /**
  * `useVueFlow` provides:

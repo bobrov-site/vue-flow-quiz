@@ -47,6 +47,13 @@ export const initialNodes = [
     data: {label: 'Ответ'},
     position: {x: 800, y: 800},
     class: 'light'
+  },
+  {
+    id: '8',
+    type: 'result',
+    data: {label: 'Результат'},
+    position: {x: 800, y: 800},
+    class: 'light',
   }
 ]
 
