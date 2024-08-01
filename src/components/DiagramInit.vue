@@ -10,11 +10,11 @@
   >
     <Background pattern-color="#aaa" :gap="16" />
 
-    <template #node-question>
-      <QuestionNode />
+    <template #node-question="questionNodeProps">
+      <QuestionNode v-bind="questionNodeProps"/>
     </template>
-    <template #node-answer>
-      <AnswerNode />
+    <template #node-answer="answerNodeProps">
+      <AnswerNode v-bind="answerNodeProps"/>
     </template>
     <template #node-result>
       <ResultNode />
