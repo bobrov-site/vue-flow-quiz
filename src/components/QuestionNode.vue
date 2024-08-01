@@ -12,36 +12,32 @@ import { useVueFlow, Position } from '@vue-flow/core'
 import type { Edge, Node, NodeProps } from '@vue-flow/core'
 const props = defineProps<NodeProps>()
 const question = ref<string>('');
-const { getNodes, getEdges, addNodes, onInit} = useVueFlow();
+const { getNodes, getEdges, addNodes, onInit, addEdges} = useVueFlow();
 
 onInit(() => {
     question.value = props.data.question
 })
 const addAnswer = () => {
-    const licenses = []
     const id = String(getNodes.value.length + 1);
-    const currentNode = getNodes.value[getNodes.value.length - 1];
-    console.log(currentNode)
-    const parentNode = getEdges.value.find((node) => node.target === id);
-    const numberAnswer = getEdges.value.filter(edge => edge.source === currentNode.id).length + 1;
+    const numberAnswer = getEdges.value.filter(edge => edge.source === props.id).length + 1;
     const data = {
-        title: `Ответ ${numberAnswer} на вопрос ${currentNode.id}`,
+        title: `Ответ ${numberAnswer} на вопрос ${props.id}`,
         text: 'Да',
+    }
+    const edge: Edge = {
+        id: `e${props.id}-${id}`,
+        source: props.id,
+        target: id,
     }
     const node: Node = {
         id,
         data,
         type: 'answer',
-        parentNode: parentNode ? parentNode.id : '',
-        position: { x: Math.random() * 500, y: Math.random() * 500 },
+        position: { x: 0, y: Math.random() * 400 },
         sourcePosition: Position.Bottom
     }
     addNodes(node);
-    // const edge: Edge = {
-    //     id: `e${id}`,
-    //     source: id,
-    //     target: id,
-    // }
+    addEdges(edge);
 }
 </script>
 
