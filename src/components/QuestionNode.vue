@@ -7,14 +7,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useVueFlow, Position } from '@vue-flow/core'
 import type { Edge, Node, NodeProps } from '@vue-flow/core'
 const props = defineProps<NodeProps>()
 const question = ref<string>('');
-const { getNodes, getEdges, addNodes, onInit, addEdges} = useVueFlow();
+const { getNodes, getEdges, addNodes, addEdges} = useVueFlow();
 
-onInit(() => {
+onMounted(() => {
     question.value = props.data.question
 })
 const addAnswer = () => {
@@ -23,6 +23,7 @@ const addAnswer = () => {
     const data = {
         title: `Ответ ${numberAnswer} на вопрос ${props.id}`,
         text: 'Да',
+        licenses: []
     }
     const edge: Edge = {
         id: `e${props.id}-${id}`,
