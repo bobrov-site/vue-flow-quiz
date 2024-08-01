@@ -10,8 +10,11 @@
   >
     <Background pattern-color="#aaa" :gap="16" />
 
-    <template>
+    <template #node-question>
       <QuestionNode />
+    </template>
+    <template #node-answer>
+      <AnswerNode />
     </template>
 
     <MiniMap />
@@ -44,8 +47,10 @@ import { Background } from '@vue-flow/background'
 import { ControlButton, Controls } from '@vue-flow/controls'
 import { MiniMap } from '@vue-flow/minimap'
 import { initialEdges, initialNodes } from '../../initial-elements.js'
+import type { Edge, Node } from '@vue-flow/core'
 import QuestionNode from './QuestionNode.vue';
-import Icon from './icons/Icon.vue'
+import AnswerNode from './AnswerNode.vue';
+import Icon from '@/components/icons/Icon.vue'
 
 /**
  * `useVueFlow` provides:
@@ -55,12 +60,12 @@ import Icon from './icons/Icon.vue'
  */
 const { onInit, onNodeDragStop, onConnect, addEdges, setViewport, toObject } = useVueFlow()
 
-const nodes = ref(initialNodes)
+const nodes = ref<Node[]>(initialNodes)
 
-const edges = ref(initialEdges)
+const edges = ref<Edge[]>(initialEdges)
 
 // our dark mode toggle flag
-const dark = ref(false)
+const dark = ref<boolean>(false)
 
 /**
  * This is a Vue Flow event-hook which can be listened to from anywhere you call the composable, instead of only on the main component
