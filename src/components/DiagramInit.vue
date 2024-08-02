@@ -27,8 +27,8 @@
         <Icon name="reset" />
       </ControlButton>
 
-      <ControlButton title="Shuffle Node Positions" @click="updatePos">
-        <Icon name="update" />
+      <ControlButton title="Save json" @click="saveJson">
+        <Icon name="save" />
       </ControlButton>
 
       <ControlButton title="Toggle Dark Mode" @click="toggleDarkMode">
@@ -55,6 +55,7 @@ import QuestionNode from './QuestionNode.vue';
 import AnswerNode from './AnswerNode.vue';
 import Icon from '@/components/icons/Icon.vue'
 import ResultNode from './ResultNode.vue'
+import api from '@/api.js'
 
 /**
  * `useVueFlow` provides:
@@ -62,7 +63,7 @@ import ResultNode from './ResultNode.vue'
  * 2. a set of event-hooks to listen to VueFlow events (like `onInit`, `onNodeDragStop`, `onConnect`, etc)
  * 3. the internal state of the VueFlow instance (like `nodes`, `edges`, `viewport`, etc)
  */
-const { onInit, onNodeDragStop, onConnect, addEdges, setViewport, toObject } = useVueFlow()
+const { onInit, onConnect, addEdges, setViewport, toObject, fromObject } = useVueFlow()
 
 const nodes = ref<Node[]>(initialNodes)
 
@@ -77,20 +78,14 @@ const dark = ref<boolean>(false)
  *
  * onInit is called when the VueFlow viewport is initialized
  */
-onInit((vueFlowInstance) => {
+onInit(async(vueFlowInstance) => {
   // instance is the same as the return of `useVueFlow`
+  const quiz = await api.fetchNodes();
+  if (quiz) {
+    fromObject(quiz);
+  }
   vueFlowInstance.fitView()
 })
-
-/**
- * onNodeDragStop is called when a node is done being dragged
- *
- * Node drag events provide you with:
- * 1. the event object
- * 2. the nodes array (if multiple nodes are dragged)
- * 3. the node that initiated the drag
- * 4. any intersections with other nodes
- */
 
 /**
  * onConnect is called when a new connection is created.
@@ -107,16 +102,9 @@ onConnect((connection) => {
  * 2. Use the `updateNode` method (from `useVueFlow`) to update the node(s)
  * 3. Create a new array of nodes and pass it to the `nodes` ref
  */
-function updatePos() {
-  nodes.value = nodes.value.map((node) => {
-    return {
-      ...node,
-      position: {
-        x: Math.random() * 400,
-        y: Math.random() * 400,
-      },
-    }
-  })
+const saveJson = () => {
+  const json = JSON.stringify(toObject())
+  api.saveJson(json);
 }
 
 /**
