@@ -64,10 +64,10 @@ const isDisabled = (license: License): boolean => {
 
 const addLicense = () => {
     disabledLicenses.value.push(selectedLicenses.value[selectedLicenses.value.length - 1])
-    const newLicense: License = {
-        id: 0,
-        name: '',
-        weight: '0'
+    const selectedLicensesNames = selectedLicenses.value.map((item) => item.name)
+    const newLicense = licenses.value?.filter((item) => !selectedLicensesNames.includes(item.name))[0]
+    if (!newLicense) {
+     return   
     }
     selectedLicenses.value.push(newLicense);
 }
