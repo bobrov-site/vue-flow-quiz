@@ -86,10 +86,11 @@ const addLicense = () => {
 const addQuestion = () => {
     const id = String(getNodes.value.length + 1);
     const numberQuestion = getNodes.value.filter(node => node.type === 'question').length + 1;
-    const countChildrenQuestions = getEdges.value.filter(edge => edge.source === props.id).length
     const currentNode = getNodes.value.find(node => node.id === props.id)
+    const childrenEdges = getEdges.value.filter((edge) => edge.source === props.id)
+    const childrenNodes = getNodes.value.filter((node) => childrenEdges.some((edge) => edge.target === node.id))
     currentNode.data.licenses = selectedLicenses.value
-    if (countChildrenQuestions > 0) {
+    if (childrenNodes.some((node) => node.type === 'question')) {
         return
     }
     const data = {
@@ -153,6 +154,11 @@ const calculateTotalLicencesWeight = (nodeId:string, currentNode) => {
 const addResult = () => {
     const id = String(getNodes.value.length + 1);
     const currentNode = getNodes.value.find(node => node.id === props.id)
+    const childrenEdges = getEdges.value.filter((edge) => edge.source === props.id)
+    const childrenNodes = getNodes.value.filter((node) => childrenEdges.some((edge) => edge.target === node.id))
+    if (childrenNodes.some((node) => node.type === 'result')) {
+        return
+    }
     currentNode.data.licenses = selectedLicenses.value;
     calculateTotalLicencesWeight(props.id, currentNode);
     const data = {
