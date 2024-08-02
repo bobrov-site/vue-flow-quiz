@@ -91,9 +91,6 @@ onInit((vueFlowInstance) => {
  * 3. the node that initiated the drag
  * 4. any intersections with other nodes
  */
-onNodeDragStop(({ event, nodes, node }) => {
-  console.log('Node Drag Stop', { event, nodes, node })
-})
 
 /**
  * onConnect is called when a new connection is created.
