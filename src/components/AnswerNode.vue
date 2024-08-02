@@ -22,18 +22,19 @@
         </div>
         <button @click="addLicense" class="node-button" type="button">+ Добавить лицензию</button>
         <hr class="node-hr">
-        <button class="node-button node-button-green mb-12">Добавить вопрос</button>
+        <button @click="addQuestion" class="node-button node-button-green mb-12">Добавить вопрос</button>
         <button class="node-button node-button-green">Результат</button>
     </div>
 </template>
 
 <script setup lang="ts">
 import {onMounted, ref} from 'vue';
-import { useVueFlow } from '@vue-flow/core'
-import type { NodeProps } from '@vue-flow/core';
+import { useVueFlow, Position } from '@vue-flow/core'
+import type { NodeProps, Edge, Node } from '@vue-flow/core';
 import type { License } from '../types.ts';
 import api from '../api';
-const { getNodes, getEdges, addNodes} = useVueFlow();
+
+const { getNodes, getEdges, addNodes, addEdges} = useVueFlow();
 const answer = ref<string>('');
 const props = defineProps<NodeProps>()
 const licenses = ref<License[] | []>()
@@ -71,6 +72,33 @@ const addLicense = () => {
     selectedLicenses.value.push(newLicense);
 }
 
+const addQuestion = () => {
+    const id = String(getNodes.value.length + 1);
+    const numberQuestion = getNodes.value.filter(node => node.type === 'question').length + 1;
+    const countChildrenQuestions = getEdges.value.filter(edge => edge.source === props.id).length
+    if (countChildrenQuestions > 0) {
+        return
+    }
+    const data = {
+        title: `Вопрос ${numberQuestion}`,
+        question: 'Является ли ваше произведение ПО',
+        licenses: selectedLicenses.value
+    }
+    const edge: Edge = {
+        id: `e${props.id}-${id}`,
+        source: props.id,
+        target: id,
+    }
+    const node: Node = {
+        id,
+        data,
+        type: 'question',
+        position: { x: 0, y: 400 },
+        sourcePosition: Position.Bottom
+    }
+    addNodes(node);
+    addEdges(edge);
+}
 </script>
 
 <style scoped>
