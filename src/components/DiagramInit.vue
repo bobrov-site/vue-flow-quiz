@@ -30,6 +30,10 @@
       <ControlButton title="Save json" @click="saveJson">
         <Icon name="save" />
       </ControlButton>
+      
+      <ControlButton title="Delete all" @click="resetAll">
+        <Icon name="delete"/>
+      </ControlButton>
 
       <ControlButton title="Toggle Dark Mode" @click="toggleDarkMode">
         <Icon v-if="dark" name="sun" />
@@ -63,7 +67,7 @@ import api from '@/api.js'
  * 2. a set of event-hooks to listen to VueFlow events (like `onInit`, `onNodeDragStop`, `onConnect`, etc)
  * 3. the internal state of the VueFlow instance (like `nodes`, `edges`, `viewport`, etc)
  */
-const { onInit, onConnect, addEdges, setViewport, toObject, fromObject } = useVueFlow()
+const { onInit, onConnect, addEdges, setViewport, toObject, fromObject, getNodes, getEdges, removeNodes, removeEdges } = useVueFlow()
 
 const nodes = ref<Node[]>(initialNodes)
 
@@ -105,6 +109,11 @@ onConnect((connection) => {
 const saveJson = () => {
   const json = JSON.stringify(toObject())
   api.saveJson(json);
+}
+
+const resetAll = () => {
+  removeNodes(getNodes.value.map((node) => node.id).filter((id,index) => index !== 0));
+  removeEdges(getEdges.value.map((edge) => edge.id));
 }
 
 /**
