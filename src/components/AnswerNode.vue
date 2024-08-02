@@ -23,7 +23,7 @@
         <button @click="addLicense" class="node-button" type="button" :disabled="process === 'loading'">+ Добавить лицензию</button>
         <hr class="node-hr">
         <button @click="addQuestion" class="node-button node-button-green mb-12">Добавить вопрос</button>
-        <button class="node-button node-button-green">Результат</button>
+        <button @click="addResult" class="node-button node-button-green">Результат</button>
     </div>
 </template>
 
@@ -34,10 +34,11 @@ import type { NodeProps, Edge, Node } from '@vue-flow/core';
 import type { License } from '../types.ts';
 import api from '../api';
 
-const { getNodes, getEdges, addNodes, addEdges} = useVueFlow();
+const { getNodes, getEdges, addNodes, addEdges } = useVueFlow();
 const answer = ref<string>('');
 const props = defineProps<NodeProps>()
 const licenses = shallowRef<License[] | []>()
+const resultLicenses = shallowRef<License[] | []>()
 const selectedLicenses = shallowRef<License[]>([]);
 const disabledLicenses = ref<License[]>([]);
 const process = ref('loading');
@@ -86,6 +87,8 @@ const addQuestion = () => {
     const id = String(getNodes.value.length + 1);
     const numberQuestion = getNodes.value.filter(node => node.type === 'question').length + 1;
     const countChildrenQuestions = getEdges.value.filter(edge => edge.source === props.id).length
+    const currentNode = getNodes.value.find(node => node.id === props.id)
+    currentNode.data.licenses = selectedLicenses.value
     if (countChildrenQuestions > 0) {
         return
     }
@@ -103,6 +106,69 @@ const addQuestion = () => {
         id,
         data,
         type: 'question',
+        position: { x: 0, y: 400 },
+        sourcePosition: Position.Bottom
+    }
+    addNodes(node);
+    addEdges(edge);
+}
+
+const calculateTotalLicencesWeight = (nodeId:string) => {
+    const allLicenses = []
+    const allNodes = []
+    const parentEdges = []
+    const currentNode = getNodes.value.find((node) => node.id === nodeId)
+    const getParentsNodes = (id:string) => {
+        const parentEdge = getEdges.value.find((edge) => edge.target === id);
+        if (parentEdge) {
+            parentEdges.push(parentEdge);
+            getParentsNodes(parentEdge.source);
+        }
+        return
+    }
+    getParentsNodes(nodeId)
+    const parentNodes = parentEdges.map((edge) => {
+        return getNodes.value.find((node) => node.id === edge.source)
+    })
+    allNodes.push(...parentNodes, currentNode)
+    const answerNodes = allNodes.filter((node) => node.type === 'answer')
+    answerNodes.forEach((node) => {
+        allLicenses.push(...node?.data.licenses);
+    })
+    const uniqueObjects = allLicenses.filter((obj, index, self) =>
+    index === self.findIndex((t) => t.id === obj.id)
+    );
+    const result = uniqueObjects.map((license) => {
+        let weight = 0;
+        allLicenses.forEach((l) => {
+          if (l.name === license.name) {
+            weight += Number(l.weight);
+          }
+        })
+        license.weight = String(weight);
+        return license
+    })
+    resultLicenses.value = result.filter((license) => license.weight !== 'NaN');
+}
+const addResult = () => {
+    const id = String(getNodes.value.length + 1);
+    const currentNode = getNodes.value.find(node => node.id === props.id)
+    currentNode.data.licenses = selectedLicenses.value;
+    calculateTotalLicencesWeight(props.id);
+    console.log(currentNode.data.licenses)
+    const data = {
+        text: 'Пояснительный текст',
+        licenses: resultLicenses.value
+    }
+    const edge: Edge = {
+        id: `e${props.id}-${id}`,
+        source: props.id,
+        target: id,
+    }
+    const node: Node = {
+        id,
+        data,
+        type: 'result',
         position: { x: 0, y: 400 },
         sourcePosition: Position.Bottom
     }
