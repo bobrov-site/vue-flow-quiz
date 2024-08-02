@@ -73,16 +73,24 @@
     padding-bottom: 10px;
     border-radius: 6px;
     background: #FFFFFF;
+    width: 100%;
+    max-width: 150px;
+    text-align: left;
+}
+
+.node-license-item-count {
+    max-width: 50px;
 }
 
 .node-license-select {
     border: 1px solid #E2E8F0;
     padding: 10px;
     color: #0F172A;
-    font-weight: 500;
-    line-height: 16px;
     background: #FFFFFF;
     border-radius: 6px;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
 }
 
 .node-licenses-list {
