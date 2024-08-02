@@ -34,7 +34,7 @@ import type { NodeProps, Edge, Node } from '@vue-flow/core';
 import type { License } from '../types.ts';
 import api from '../api';
 
-const { getNodes, getEdges, addNodes, addEdges, } = useVueFlow();
+const { getNodes, getEdges, addNodes, addEdges, dimensions } = useVueFlow();
 const answer = ref<string>('');
 const props = defineProps<NodeProps>()
 const licenses = shallowRef<License[] | []>()
@@ -106,7 +106,7 @@ const addQuestion = () => {
         id,
         data,
         type: 'question',
-        position: { x: 0, y: 400 },
+        position: { x: Math.random() * dimensions.value.width, y: Math.random() * dimensions.value.height },
         sourcePosition: Position.Bottom
     }
     addNodes(node);
@@ -168,7 +168,7 @@ const addResult = () => {
         id,
         data,
         type: 'result',
-        position: { x: 0, y: 400 },
+        position: { x: Math.random() * dimensions.value.width, y: Math.random() * dimensions.value.height },
         sourcePosition: Position.Bottom
     }
     addNodes(node);

@@ -12,7 +12,7 @@ import { useVueFlow, Position } from '@vue-flow/core'
 import type { Edge, Node, NodeProps } from '@vue-flow/core'
 const props = defineProps<NodeProps>()
 const question = ref<string>('');
-const { getNodes, getEdges, addNodes, addEdges} = useVueFlow();
+const { getNodes, getEdges, addNodes, addEdges, dimensions} = useVueFlow();
 
 onMounted(() => {
     question.value = props.data.question
@@ -39,7 +39,7 @@ const addAnswer = () => {
         id,
         data,
         type: 'answer',
-        position: { x: 0, y: Math.random() * 400 },
+        position: { x: Math.random() * dimensions.value.width, y: Math.random() * dimensions.value.height },
         sourcePosition: Position.Bottom
     }
     addNodes(node);
