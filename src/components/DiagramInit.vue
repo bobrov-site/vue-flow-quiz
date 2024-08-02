@@ -16,8 +16,8 @@
     <template #node-answer="answerNodeProps">
       <AnswerNode v-bind="answerNodeProps"/>
     </template>
-    <template #node-result>
-      <ResultNode />
+    <template #node-result="resultNodeProps">
+      <ResultNode v-bind="resultNodeProps"/>
     </template>
 
     <MiniMap />
