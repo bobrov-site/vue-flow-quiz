@@ -21,10 +21,14 @@ const addAnswer = () => {
     const id = String(getNodes.value.length + 1);
     const numberAnswer = getEdges.value.filter(edge => edge.source === props.id).length + 1;
     const numberQuestion = props.data.title.split(' ')[1]
+    const licenses = []
+    if (props.data.licenses.length !== 0) {
+        licenses.push(props.data.licenses);
+    }
     const data = {
         title: `Ответ ${numberAnswer} на вопрос ${numberQuestion}`,
         text: 'Да',
-        licenses: []
+        licenses
     }
     const edge: Edge = {
         id: `e${props.id}-${id}`,
