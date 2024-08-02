@@ -20,7 +20,7 @@
                 </select>
             </div>
         </div>
-        <button @click="addLicense" class="node-button" type="button">+ Добавить лицензию</button>
+        <button @click="addLicense" class="node-button" type="button" :disabled="process === 'loading'">+ Добавить лицензию</button>
         <hr class="node-hr">
         <button @click="addQuestion" class="node-button node-button-green mb-12">Добавить вопрос</button>
         <button class="node-button node-button-green">Результат</button>
@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref} from 'vue';
+import {onMounted, ref, shallowRef} from 'vue';
 import { useVueFlow, Position } from '@vue-flow/core'
 import type { NodeProps, Edge, Node } from '@vue-flow/core';
 import type { License } from '../types.ts';
@@ -37,15 +37,17 @@ import api from '../api';
 const { getNodes, getEdges, addNodes, addEdges} = useVueFlow();
 const answer = ref<string>('');
 const props = defineProps<NodeProps>()
-const licenses = ref<License[] | []>()
-const selectedLicenses = ref<License[]>([]);
+const licenses = shallowRef<License[] | []>()
+const selectedLicenses = shallowRef<License[]>([]);
 const disabledLicenses = ref<License[]>([]);
+const process = ref('loading');
 onMounted(async() => {
     answer.value = props.data.text;
     await fetchLicenses();
 })
 
 const fetchLicenses = async() => {
+    process.value = 'loading';
     const response = await api.fetchLicenses();
     licenses.value = response.map((licence: License) => {
         const newLicense = {
@@ -55,7 +57,15 @@ const fetchLicenses = async() => {
         }
         return newLicense;
     })
-    selectedLicenses.value.push(licenses.value[0])
+    if (props.data.licenses.length !== 0) {
+        const filtred = props.data.licenses[0].filter((license: License) => license.weight !== 'null')
+        selectedLicenses.value.push(...filtred)
+        disabledLicenses.value.push(...filtred)
+    }
+    else {
+        selectedLicenses.value.push(licenses.value[0])
+    }
+    process.value = 'loaded';
 }
 
 const isDisabled = (license: License): boolean => {
