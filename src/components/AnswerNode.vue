@@ -34,12 +34,12 @@ import type { NodeProps, Edge, Node } from '@vue-flow/core';
 import type { License } from '../types.ts';
 import api from '../api';
 
-const { getNodes, getEdges, addNodes, addEdges } = useVueFlow();
+const { getNodes, getEdges, addNodes, addEdges, } = useVueFlow();
 const answer = ref<string>('');
 const props = defineProps<NodeProps>()
 const licenses = shallowRef<License[] | []>()
 const resultLicenses = shallowRef<License[] | []>()
-const selectedLicenses = shallowRef<License[]>([]);
+const selectedLicenses = ref<License[]>([]);
 const disabledLicenses = ref<License[]>([]);
 const process = ref('loading');
 onMounted(async() => {
@@ -113,11 +113,10 @@ const addQuestion = () => {
     addEdges(edge);
 }
 
-const calculateTotalLicencesWeight = (nodeId:string) => {
+const calculateTotalLicencesWeight = (nodeId:string, currentNode) => {
     const allLicenses = []
     const allNodes = []
     const parentEdges = []
-    const currentNode = getNodes.value.find((node) => node.id === nodeId)
     const getParentsNodes = (id:string) => {
         const parentEdge = getEdges.value.find((edge) => edge.target === id);
         if (parentEdge) {
@@ -133,7 +132,8 @@ const calculateTotalLicencesWeight = (nodeId:string) => {
     allNodes.push(...parentNodes, currentNode)
     const answerNodes = allNodes.filter((node) => node.type === 'answer')
     answerNodes.forEach((node) => {
-        allLicenses.push(...node?.data.licenses);
+        const licensesCopy = JSON.parse(JSON.stringify(node?.data.licenses));
+        allLicenses.push(...licensesCopy);
     })
     const uniqueObjects = allLicenses.filter((obj, index, self) =>
     index === self.findIndex((t) => t.id === obj.id)
@@ -154,8 +154,7 @@ const addResult = () => {
     const id = String(getNodes.value.length + 1);
     const currentNode = getNodes.value.find(node => node.id === props.id)
     currentNode.data.licenses = selectedLicenses.value;
-    calculateTotalLicencesWeight(props.id);
-    console.log(currentNode.data.licenses)
+    calculateTotalLicencesWeight(props.id, currentNode);
     const data = {
         text: 'Пояснительный текст',
         licenses: resultLicenses.value
