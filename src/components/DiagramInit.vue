@@ -7,6 +7,7 @@
     :default-viewport="{ zoom: 1.5 }"
     :min-zoom="0.2"
     :max-zoom="4"
+    :deleteKeyCode="null"
   >
     <Background pattern-color="#aaa" :gap="16" />
 
@@ -60,7 +61,6 @@ import AnswerNode from './AnswerNode.vue';
 import Icon from '@/components/icons/Icon.vue'
 import ResultNode from './ResultNode.vue'
 import api from '@/api.js'
-
 /**
  * `useVueFlow` provides:
  * 1. a set of methods to interact with the VueFlow instance (like `fitView`, `setViewport`, `addEdges`, etc)
