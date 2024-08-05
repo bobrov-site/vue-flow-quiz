@@ -136,5 +136,17 @@
     color: rgba(31, 29, 29, 0.6);
     text-transform: none;
     text-align: left;
+}
+
+.node-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 18px;
+}
+
+.node-trash-icon {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
 }

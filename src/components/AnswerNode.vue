@@ -1,6 +1,11 @@
 <template>
     <div class="node-answer node">
-        <h4 class="node-title">{{ props.data.title }}</h4>
+        <div class="node-header">
+            <h4 class="node-title">{{ props.data.title }}</h4>
+            <div class="node-trash-icon">
+                <Icon name="delete"/>
+            </div>
+        </div>
         <input v-model="answer" class="node-input" type="text"/>
         <div class="node-licenses-wrapper">
             <div class="node-license-header">
@@ -33,6 +38,7 @@ import { useVueFlow, Position } from '@vue-flow/core'
 import type { NodeProps, Edge, Node } from '@vue-flow/core';
 import type { License } from '../types.ts';
 import api from '../api';
+import Icon from '@/components/icons/Icon.vue';
 
 const { getNodes, getEdges, addNodes, addEdges, dimensions } = useVueFlow();
 const answer = ref<string>('');
