@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 import {onMounted, ref, shallowRef} from 'vue';
-import { useVueFlow, Position } from '@vue-flow/core'
+import { useVueFlow, Position, useNode } from '@vue-flow/core'
 import type { NodeProps, Edge, Node } from '@vue-flow/core';
 import type { License } from '../types.ts';
 import api from '../api';
@@ -49,6 +49,7 @@ const selectedLicenses = ref<License[]>([]);
 const disabledLicenses = ref<License[]>([]);
 const chilrenNodesIds = ref<string[]>([])
 const process = ref('loading');
+const { node } = useNode();
 onMounted(async() => {
     answer.value = props.data.text;
     await fetchLicenses();
@@ -66,13 +67,13 @@ const fetchLicenses = async() => {
         return newLicense;
     })
     if (props.data.licenses.length !== 0) {
-        const filtred = props.data.licenses[0].filter((license: License) => license.weight !== 'null')
-        selectedLicenses.value.push(...filtred)
-        disabledLicenses.value.push(...filtred)
+        selectedLicenses.value.push(...props.data.licenses)
+        disabledLicenses.value.push(...props.data.licenses)
     }
     else {
         selectedLicenses.value.push(licenses.value[0])
     }
+    node.data.licenses = selectedLicenses.value
     process.value = 'loaded';
 }
 
