@@ -12,5 +12,6 @@ import DiagramInit from './components/DiagramInit.vue'
 .diagram-parent {
   width: 100vw;
   height: 100vh;
+  border: 1px solid #E2E8F0;
 }
 </style>
