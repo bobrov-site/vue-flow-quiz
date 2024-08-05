@@ -67,6 +67,7 @@ const fetchLicenses = async() => {
         return newLicense;
     })
     if (props.data.licenses.length !== 0) {
+        console.log(props.data.licenses, 'propes')
         selectedLicenses.value.push(...props.data.licenses)
         disabledLicenses.value.push(...props.data.licenses)
     }
@@ -112,10 +113,11 @@ const addQuestion = () => {
     if (childrenNodes.some((node) => node.type === 'question')) {
         return
     }
+    console.log(props.data.licenses)
     const data = {
         title: `Вопрос ${numberQuestion}`,
         question: 'Является ли ваше произведение ПО',
-        licenses: selectedLicenses.value
+        licenses: props.data.licenses
     }
     const edge: Edge = {
         id: `e${props.id}-${id}`,
