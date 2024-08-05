@@ -21,7 +21,7 @@
                 <select :disabled="isHaveChildren()" v-model="license.weight" class="node-license-select">
                     <option value="1">1</option>
                     <option value="0">0</option>
-                    <option value="null">null</option>
+                    <option value="null">Исключить</option>
                 </select>
             </div>
         </div>
