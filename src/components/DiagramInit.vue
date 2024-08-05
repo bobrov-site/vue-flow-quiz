@@ -9,7 +9,7 @@
     :max-zoom="4"
     :deleteKeyCode="null"
   >
-    <Background pattern-color="#aaa" :gap="16" />
+    <Background pattern-color="#fff" :gap="16" />
 
     <template #node-question="questionNodeProps">
       <QuestionNode v-bind="questionNodeProps"/>
@@ -23,9 +23,10 @@
 
     <MiniMap />
 
-    <Controls position="top-left">
-      <ControlButton title="Reset Transform" @click="resetTransform">
-        <Icon name="reset" />
+    <Controls :showFitView="false" position="top-left">
+
+      <ControlButton title="fullwidth" @click="fullWidth">
+        <Icon name="fullwidth"/>
       </ControlButton>
 
       <ControlButton title="Save json" @click="saveJson">
@@ -36,10 +37,10 @@
         <Icon name="delete"/>
       </ControlButton>
 
-      <ControlButton title="Toggle Dark Mode" @click="toggleDarkMode">
+      <!-- <ControlButton title="Toggle Dark Mode" @click="toggleDarkMode">
         <Icon v-if="dark" name="sun" />
         <Icon v-else name="moon" />
-      </ControlButton>
+      </ControlButton> -->
 
       <ControlButton title="Log `toObject`" @click="logToObject">
         <Icon name="log" />
@@ -67,7 +68,7 @@ import api from '@/api.js'
  * 2. a set of event-hooks to listen to VueFlow events (like `onInit`, `onNodeDragStop`, `onConnect`, etc)
  * 3. the internal state of the VueFlow instance (like `nodes`, `edges`, `viewport`, etc)
  */
-const { onInit, onConnect, addEdges, setViewport, toObject, fromObject, getNodes, getEdges, removeNodes, removeEdges } = useVueFlow()
+const { onInit, onConnect, addEdges, toObject, fromObject, getNodes, getEdges, removeNodes, removeEdges, vueFlowRef } = useVueFlow()
 
 const nodes = ref<Node[]>(initialNodes)
 
@@ -88,7 +89,6 @@ onInit(async(vueFlowInstance) => {
   if (quiz) {
     fromObject(quiz);
   }
-  vueFlowInstance.fitView()
 })
 
 /**
@@ -123,15 +123,35 @@ function logToObject() {
   console.log(toObject())
 }
 
-/**
- * Resets the current viewport transformation (zoom & pan)
- */
-function resetTransform() {
-  setViewport({ x: 0, y: 0, zoom: 1 })
-}
 
 function toggleDarkMode() {
   dark.value = !dark.value
+}
+
+const fullWidth = () => {
+  if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+                // Вход в полноэкранный режим
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+                    document.documentElement.mozRequestFullScreen();
+                } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari и Opera
+                    document.documentElement.webkitRequestFullscreen();
+                } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+                    document.documentElement.msRequestFullscreen();
+                }
+            } else {
+                // Выход из полноэкранного режима
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.mozCancelFullScreen) { // Firefox
+                    document.mozCancelFullScreen();
+                } else if (document.webkitExitFullscreen) { // Chrome, Safari и Opera
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) { // IE/Edge
+                    document.msExitFullscreen();
+                }
+            }
 }
 </script>
 
