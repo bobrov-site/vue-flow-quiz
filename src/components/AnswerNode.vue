@@ -2,7 +2,7 @@
     <div class="node-answer node">
         <div class="node-header">
             <h4 class="node-title">{{ props.data.title }}</h4>
-            <div class="node-trash-icon">
+            <div @click="deleteNodes" class="node-trash-icon">
                 <Icon name="delete"/>
             </div>
         </div>
@@ -40,13 +40,14 @@ import type { License } from '../types.ts';
 import api from '../api';
 import Icon from '@/components/icons/Icon.vue';
 
-const { getNodes, getEdges, addNodes, addEdges, dimensions } = useVueFlow();
+const { getNodes, getEdges, addNodes, addEdges, dimensions, removeNodes } = useVueFlow();
 const answer = ref<string>('');
 const props = defineProps<NodeProps>()
 const licenses = shallowRef<License[] | []>()
 const resultLicenses = shallowRef<License[] | []>()
 const selectedLicenses = ref<License[]>([]);
 const disabledLicenses = ref<License[]>([]);
+const chilrenNodesIds = ref<string[]>([])
 const process = ref('loading');
 onMounted(async() => {
     answer.value = props.data.text;
@@ -185,6 +186,22 @@ const addResult = () => {
     }
     addNodes(node);
     addEdges(edge);
+}
+
+const getChildrenNodes = (parentId: string) => {
+    const targetEdges = getEdges.value.filter((edge:Edge) => edge.source === parentId)
+    if (targetEdges) {
+        const targetIds = targetEdges.map((edge:Edge) => edge.target);
+        chilrenNodesIds.value.push(...targetIds);
+        targetIds.forEach((id: string) => getChildrenNodes(id))
+    }
+    return
+}
+
+const deleteNodes = () => {
+    chilrenNodesIds.value.push(props.id);
+    getChildrenNodes(props.id)
+    removeNodes(chilrenNodesIds.value)
 }
 </script>
 

@@ -1,6 +1,11 @@
 <template>
     <div class="node-question node">
-        <h4 class="node-title">{{ props.data.title }}</h4>
+        <div class="node-header">
+            <h4 class="node-title">{{ props.data.title }}</h4>
+            <div v-if="props.id !== '1'" @click="deleteNodes" class="node-trash-icon">
+                <Icon name="delete"/>
+            </div>
+        </div>
         <input v-model="question" class="node-input" type="text"/>
         <button @click="addAnswer" class="node-button node-button-green" type="button">Добавить ответ</button>
     </div>
@@ -10,9 +15,12 @@
 import { onMounted, ref } from 'vue';
 import { useVueFlow, Position } from '@vue-flow/core'
 import type { Edge, Node, NodeProps } from '@vue-flow/core'
+import Icon from '@/components/icons/Icon.vue';
+
 const props = defineProps<NodeProps>()
 const question = ref<string>('');
-const { getNodes, getEdges, addNodes, addEdges, dimensions} = useVueFlow();
+const chilrenNodesIds = ref<string[]>([])
+const { getNodes, getEdges, addNodes, addEdges, dimensions, removeNodes} = useVueFlow();
 
 onMounted(() => {
     question.value = props.data.question
@@ -44,6 +52,22 @@ const addAnswer = () => {
     }
     addNodes(node);
     addEdges(edge);
+}
+
+const getChildrenNodes = (parentId: string) => {
+    const targetEdges = getEdges.value.filter((edge:Edge) => edge.source === parentId)
+    if (targetEdges) {
+        const targetIds = targetEdges.map((edge:Edge) => edge.target);
+        chilrenNodesIds.value.push(...targetIds);
+        targetIds.forEach((id: string) => getChildrenNodes(id))
+    }
+    return
+}
+
+const deleteNodes = () => {
+    chilrenNodesIds.value.push(props.id);
+    getChildrenNodes(props.id)
+    removeNodes(chilrenNodesIds.value)
 }
 </script>
 
