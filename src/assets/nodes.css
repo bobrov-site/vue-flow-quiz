@@ -76,8 +76,9 @@
     width: 100%;
     max-width: 150px;
     text-align: left;
+    cursor: pointer;
+    text-transform: none;
 }
-
 .node-license-item-count {
     max-width: 50px;
 }
