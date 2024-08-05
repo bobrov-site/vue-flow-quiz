@@ -15,10 +15,10 @@
         </div>
         <div class="node-licenses-list">
             <div v-for="license in selectedLicenses" :key="license.id" class="node-license-item">
-                <select v-model="license.name" class="node-license-select">
+                <select :disabled="isHaveChildren()" v-model="license.name" class="node-license-select">
                     <option v-for="item in licenses" :key="item.id" :value="item.name" :disabled="isDisabled(item)">{{ item.name}}</option>
                 </select>
-                <select v-model="license.weight" class="node-license-select">
+                <select :disabled="isHaveChildren()" v-model="license.weight" class="node-license-select">
                     <option value="1">1</option>
                     <option value="0">0</option>
                     <option value="null">null</option>
@@ -48,7 +48,7 @@ const resultLicenses = shallowRef<License[] | []>()
 const selectedLicenses = ref<License[]>([]);
 const disabledLicenses = ref<License[]>([]);
 const chilrenNodesIds = ref<string[]>([])
-const process = ref('loading');
+const process = ref('');
 const { node } = useNode();
 onMounted(async() => {
     answer.value = props.data.text;
@@ -81,7 +81,18 @@ const isDisabled = (license: License): boolean => {
     return disabledLicenses.value.some((item) => item.name === license.name)
 }
 
+const isHaveChildren = ():boolean => {
+    const childrenEdges = getEdges.value.find((edge) => edge.source === props.id)
+    if (childrenEdges) {
+        return true
+    }
+    return false
+}
+
 const addLicense = () => {
+    if (isHaveChildren()) {
+        return
+    }
     disabledLicenses.value.push(selectedLicenses.value[selectedLicenses.value.length - 1])
     const selectedLicensesNames = selectedLicenses.value.map((item) => item.name)
     const newLicense = licenses.value?.filter((item) => !selectedLicensesNames.includes(item.name))[0]
@@ -160,6 +171,9 @@ const calculateTotalLicencesWeight = (nodeId:string, currentNode) => {
     resultLicenses.value = result.filter((license) => license.weight !== 'NaN');
 }
 const addResult = () => {
+    if (isHaveChildren()) {
+        return
+    }
     const id = String(getNodes.value.length + 1);
     const currentNode = getNodes.value.find(node => node.id === props.id)
     const childrenEdges = getEdges.value.filter((edge) => edge.source === props.id)
