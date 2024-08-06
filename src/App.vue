@@ -10,8 +10,8 @@ import DiagramInit from './components/DiagramInit.vue'
 
 <style scoped>
 .diagram-parent {
-  width: 100vw;
+  width: 100%;
   height: 100vh;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #3e8cf3;
 }
 </style>
