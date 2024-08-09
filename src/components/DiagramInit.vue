@@ -62,6 +62,8 @@ import AnswerNode from './AnswerNode.vue';
 import Icon from '@/components/icons/Icon.vue'
 import ResultNode from './ResultNode.vue'
 import api from '@/api.js'
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 /**
  * `useVueFlow` provides:
  * 1. a set of methods to interact with the VueFlow instance (like `fitView`, `setViewport`, `addEdges`, etc)
@@ -109,13 +111,21 @@ onConnect((connection) => {
  * 2. Use the `updateNode` method (from `useVueFlow`) to update the node(s)
  * 3. Create a new array of nodes and pass it to the `nodes` ref
  */
-const saveJson = () => {
+const saveJson = async() => {
   // const quiz = {
   //   quiz: toObject()
   // }
   // const json = JSON.stringify(toObject());
   console.log(quizId.value)
-  api.saveJson(toObject(), quizId.value);
+  try {
+    await api.saveJson(toObject(), quizId.value);
+    toast.success('Сохранено');
+  }
+  catch (e) {
+    console.log(e)
+    console.log(12344)
+    toast.error('Ошибка. Не сохранено');
+  }
 }
 
 const resetAll = () => {
