@@ -21,15 +21,20 @@ const fetchNodes = async() => {
     return response.data
 }
 
-const saveJson = async(json:string, id:number) => {
-    const response = await axiosInstance({
-        method: 'POST',
-        url: routes.quizId(id),
-        data: {
-            quiz: json
-        },
-    })
-    return response.data
+const saveJson = async(json, id:number) => {
+    try {
+        const response = await axiosInstance({
+            method: 'POST',
+            url: routes.quizId(id),
+            data: {
+                quiz: json
+            },
+        })
+        return response.data
+    }
+    catch (e) {
+        throw new Error(e);
+    }
 }
 
 const api = {
