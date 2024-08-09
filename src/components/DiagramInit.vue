@@ -73,6 +73,7 @@ const { onInit, onConnect, addEdges, toObject, fromObject, getNodes, getEdges, r
 const nodes = ref<Node[]>(initialNodes)
 
 const edges = ref<Edge[]>(initialEdges)
+const quizId = ref<number>();
 
 // our dark mode toggle flag
 const dark = ref<boolean>(false)
@@ -85,9 +86,11 @@ const dark = ref<boolean>(false)
  */
 onInit(async(vueFlowInstance) => {
   // instance is the same as the return of `useVueFlow`
-  const quiz = await api.fetchNodes();
+  const {quiz, id} = await api.fetchNodes();
+  quizId.value = id;
   if (quiz) {
-    fromObject(quiz);
+    // console.log(quiz)
+    fromObject(quiz.quiz);
   }
 })
 
@@ -107,8 +110,12 @@ onConnect((connection) => {
  * 3. Create a new array of nodes and pass it to the `nodes` ref
  */
 const saveJson = () => {
-  const json = JSON.stringify(toObject())
-  api.saveJson(json);
+  // const quiz = {
+  //   quiz: toObject()
+  // }
+  // const json = JSON.stringify(toObject());
+  console.log(quizId.value)
+  api.saveJson(toObject(), quizId.value);
 }
 
 const resetAll = () => {

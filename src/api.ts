@@ -18,14 +18,16 @@ const fetchLicenses = async() => {
 
 const fetchNodes = async() => {
     const response = await axiosInstance.get(routes.quiz, { headers })
-    return response.data.quiz
+    return response.data
 }
 
-const saveJson = async(json:string) => {
+const saveJson = async(json:string, id:number) => {
     const response = await axiosInstance({
         method: 'POST',
-        url: routes.quiz,
-        data: json
+        url: routes.quizId(id),
+        data: {
+            quiz: json
+        },
     })
     return response.data
 }
