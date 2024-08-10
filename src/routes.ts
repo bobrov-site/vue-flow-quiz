@@ -1,4 +1,4 @@
-const domain = import.meta.env.VUE_APP_DOMAIN; //YOUR DOMAIN
+const domain = 'https://choosealicense.dev.rusrobots.ru'; //YOUR DOMAIN
 
 const routes = {
     baseUrl: `${domain}/api`,
