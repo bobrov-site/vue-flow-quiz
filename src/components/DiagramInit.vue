@@ -25,9 +25,9 @@
 
     <Controls :showFitView="false" position="top-left">
 
-      <ControlButton title="fullwidth" @click="fullWidth">
+      <!-- <ControlButton title="fullwidth" @click="fullWidth">
         <Icon name="fullwidth"/>
-      </ControlButton>
+      </ControlButton> -->
 
       <ControlButton title="Save json" @click="saveJson">
         <Icon name="save" />
