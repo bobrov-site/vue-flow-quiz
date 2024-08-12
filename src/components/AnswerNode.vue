@@ -6,7 +6,7 @@
                 <Icon name="delete"/>
             </div>
         </div>
-        <input v-model="answer" class="node-input" type="text"/>
+        <input v-model="text" class="node-input" type="text"/>
         <div class="node-licenses-wrapper">
             <div class="node-license-header">
                 <span class="node-license-title">Лицензия</span>
@@ -41,7 +41,7 @@ import api from '../api';
 import Icon from '@/components/icons/Icon.vue';
 
 const { getNodes, getEdges, addNodes, addEdges, dimensions, removeNodes } = useVueFlow();
-const answer = ref<string>('');
+const text = ref<string>('');
 const props = defineProps<NodeProps>()
 const licenses = shallowRef<License[] | []>()
 const resultLicenses = shallowRef<License[] | []>()
@@ -51,7 +51,7 @@ const chilrenNodesIds = ref<string[]>([])
 const process = ref('');
 const { node } = useNode();
 onMounted(async() => {
-    answer.value = props.data.text;
+    text.value = props.data.text;
     await fetchLicenses();
 })
 
@@ -116,7 +116,7 @@ const addQuestion = () => {
     console.log(props.data.licenses)
     const data = {
         title: `Вопрос ${numberQuestion}`,
-        question: 'Является ли ваше произведение ПО',
+        text: 'Является ли ваше произведение ПО',
         licenses: props.data.licenses
     }
     const edge: Edge = {
