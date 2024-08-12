@@ -6,7 +6,7 @@
                 <Icon name="delete"/>
             </div>
         </div>
-        <input v-model="question" class="node-input" type="text"/>
+        <input v-model="text" class="node-input" type="text"/>
         <button @click="addAnswer" class="node-button node-button-green" type="button">Добавить ответ</button>
     </div>
 </template>
@@ -18,12 +18,12 @@ import type { Edge, Node, NodeProps } from '@vue-flow/core'
 import Icon from '@/components/icons/Icon.vue';
 
 const props = defineProps<NodeProps>()
-const question = ref<string>('');
+const text = ref<string>('');
 const chilrenNodesIds = ref<string[]>([])
 const { getNodes, getEdges, addNodes, addEdges, dimensions, removeNodes} = useVueFlow();
 
 onMounted(() => {
-    question.value = props.data.question
+    text.value = props.data.text
 })
 const addAnswer = () => {
     const id = String(getNodes.value.length + 1);
