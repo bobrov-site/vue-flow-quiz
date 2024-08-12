@@ -4,7 +4,7 @@ const routes = {
     baseUrl: `${domain}/api`,
     licensesDictionary: '/licenses/dictionary',
     quiz: '/quiz/active',
-    quizId: (id:number) => `/quiz/${id}`, 
+    quizId: (id:number) => `/quiz/${id}/update`, 
 }
 
 export default routes;

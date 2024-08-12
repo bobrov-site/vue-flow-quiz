@@ -91,7 +91,7 @@ onInit(async(vueFlowInstance) => {
   const {quiz, id} = await api.fetchNodes();
   quizId.value = id;
   if (quiz) {
-    // console.log(quiz)
+    console.log(quiz.quiz)
     fromObject(quiz.quiz);
   }
 })
