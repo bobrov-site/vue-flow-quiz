@@ -45,7 +45,7 @@ const text = ref<string>('');
 const props = defineProps<NodeProps>()
 const licenses = shallowRef<License[] | []>()
 const resultLicenses = shallowRef<License[] | []>()
-const selectedLicenses = ref<License[]>([]);
+const selectedLicenses = shallowRef<License[]>([]);
 const disabledLicenses = ref<License[]>([]);
 const chilrenNodesIds = ref<string[]>([])
 const process = ref('');
@@ -64,6 +64,7 @@ const updateNode = () => {
 }
 
 const fetchLicenses = async() => {
+    // TODO надо вынести отдельно и сократить количество запросов
     process.value = 'loading';
     const response = await api.fetchLicenses();
     licenses.value = response.map((licence: License) => {
@@ -74,15 +75,15 @@ const fetchLicenses = async() => {
         }
         return newLicense;
     })
+    //
     if (props.data.licenses.length !== 0) {
-        console.log(props.data.licenses, 'propes')
-        selectedLicenses.value.push(...props.data.licenses)
-        disabledLicenses.value.push(...props.data.licenses)
+        selectedLicenses.value = [...node.data.licenses]
+        disabledLicenses.value = [...node.data.licenses];
     }
     else {
         selectedLicenses.value.push(licenses.value[0])
     }
-    node.data.licenses = selectedLicenses.value
+    // node.data.licenses = selectedLicenses.value
     process.value = 'loaded';
 }
 
@@ -115,10 +116,8 @@ const addLicense = () => {
 const addQuestion = () => {
     const id = String(getNodes.value.length + 1);
     const numberQuestion = getNodes.value.filter(node => node.type === 'question').length + 1;
-    const currentNode = getNodes.value.find(node => node.id === props.id)
     const childrenEdges = getEdges.value.filter((edge) => edge.source === props.id)
     const childrenNodes = getNodes.value.filter((node) => childrenEdges.some((edge) => edge.target === node.id))
-    currentNode.data.licenses = selectedLicenses.value
     if (childrenNodes.some((node) => node.type === 'question')) {
         return
     }
@@ -126,7 +125,7 @@ const addQuestion = () => {
     const data = {
         title: `Вопрос ${numberQuestion}`,
         text: 'Является ли ваше произведение ПО',
-        licenses: props.data.licenses
+        licenses: selectedLicenses.value
     }
     const edge: Edge = {
         id: `e${props.id}-${id}`,
