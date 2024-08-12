@@ -6,7 +6,7 @@
                 <Icon name="delete"/>
             </div>
         </div>
-        <input v-model="text" class="node-input" type="text"/>
+        <input @change="updateNode" v-model="text" class="node-input" type="text"/>
         <div class="node-licenses-wrapper">
             <div class="node-license-header">
                 <span class="node-license-title">Лицензия</span>
@@ -55,6 +55,14 @@ onMounted(async() => {
     await fetchLicenses();
 })
 
+const updateNode = () => {
+    node.data = {
+        title: node.data.title,
+        licenses: selectedLicenses.value,
+        text: text.value,
+    }
+}
+
 const fetchLicenses = async() => {
     process.value = 'loading';
     const response = await api.fetchLicenses();
@@ -101,6 +109,7 @@ const addLicense = () => {
      return   
     }
     selectedLicenses.value.push(newLicense);
+    updateNode();
 }
 
 const addQuestion = () => {
@@ -133,6 +142,7 @@ const addQuestion = () => {
     }
     addNodes(node);
     addEdges(edge);
+    updateNode();
 }
 
 const calculateTotalLicencesWeight = (nodeId:string, currentNode) => {
@@ -203,6 +213,7 @@ const addResult = () => {
     }
     addNodes(node);
     addEdges(edge);
+    updateNode();
 }
 
 const getChildrenNodes = (parentId: string) => {

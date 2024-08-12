@@ -1,7 +1,7 @@
 <template>
     <div class="node-result node">
         <h4 class="node-title">Результат</h4>
-        <input v-model="result" class="node-input" placeholder="Текст результата" type="text"/>
+        <input @change="updateNode" v-model="text" class="node-input" placeholder="Текст результата" type="text"/>
         <div class="node-licenses-wrapper">
             <div class="node-license-header">
                 <span class="node-license-title">Лицензия</span>
@@ -19,15 +19,23 @@
 
 <script setup lang="ts">
 import {onMounted, ref} from 'vue';
+import { useNode } from '@vue-flow/core';
 import type { NodeProps } from '@vue-flow/core';
 import type { License } from '@/types';
 const props = defineProps<NodeProps>()
 const licenses = ref<License[] | []>()
-const result = ref<string>('');
+const text = ref<string>('');
+const { node: currentNode } = useNode()
 onMounted(() => {
-    result.value = props.data.text;
+    text.value = props.data.text;
     licenses.value = props.data.licenses;
 })
+const updateNode = () => {
+    currentNode.data = {
+        licenses: currentNode.data.licenses,
+        text: text.value,
+    }
+}
 </script>
 
 <style scoped>

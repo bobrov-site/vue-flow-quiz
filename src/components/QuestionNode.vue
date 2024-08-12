@@ -6,14 +6,14 @@
                 <Icon name="delete"/>
             </div>
         </div>
-        <input v-model="text" class="node-input" type="text"/>
+        <input @change="updateNode" v-model="text" class="node-input" type="text"/>
         <button @click="addAnswer" class="node-button node-button-green" type="button">Добавить ответ</button>
     </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { useVueFlow, Position } from '@vue-flow/core'
+import { useVueFlow, Position, useNode } from '@vue-flow/core'
 import type { Edge, Node, NodeProps } from '@vue-flow/core'
 import Icon from '@/components/icons/Icon.vue';
 
@@ -21,10 +21,19 @@ const props = defineProps<NodeProps>()
 const text = ref<string>('');
 const chilrenNodesIds = ref<string[]>([])
 const { getNodes, getEdges, addNodes, addEdges, dimensions, removeNodes} = useVueFlow();
+const { node: currentNode } = useNode()
 
 onMounted(() => {
     text.value = props.data.text
 })
+
+const updateNode = () => {
+    currentNode.data = {
+        title: currentNode.data.title,
+        licenses: currentNode.data.licenses,
+        text: text.value,
+    }
+}
 const addAnswer = () => {
     const id = String(getNodes.value.length + 1);
     const numberAnswer = getEdges.value.filter(edge => edge.source === props.id).length + 1;
@@ -48,6 +57,7 @@ const addAnswer = () => {
     }
     addNodes(node);
     addEdges(edge);
+    updateNode();
 }
 
 const getChildrenNodes = (parentId: string) => {
