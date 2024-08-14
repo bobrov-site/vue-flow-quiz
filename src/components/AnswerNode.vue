@@ -99,6 +99,16 @@ const isHaveChildren = ():boolean => {
     return false
 }
 
+const isHaveResult = ():boolean => {
+    const myEdges = getEdges.value.filter((edge) => edge.source === props.id)
+    const haveResult = myEdges.some((edge: Edge) => {
+        const resultsIds = getNodes.value.filter((node: Node) => node.type === 'result').map((node: Node) => node.id);
+        return resultsIds.includes(edge.target)
+    })
+    console.log(haveResult)
+    return haveResult
+}
+
 const addLicense = () => {
     if (isHaveChildren()) {
         return
@@ -114,6 +124,9 @@ const addLicense = () => {
 }
 
 const addQuestion = () => {
+    if (isHaveResult()) {
+        return
+    }
     const id = String(getNodes.value.length + 1);
     const numberQuestion = getNodes.value.filter(node => node.type === 'question').length + 1;
     const childrenEdges = getEdges.value.filter((edge) => edge.source === props.id)
