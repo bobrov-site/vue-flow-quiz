@@ -35,6 +35,17 @@ const updateNode = () => {
     }
 }
 const addAnswer = () => {
+    const node: Node = {
+        id: '',
+        type: 'answer',
+        position: { x: Math.random() * dimensions.value.width, y: Math.random() * dimensions.value.height },
+        sourcePosition: Position.Bottom
+    }
+    const edge: Edge = {
+        id: '',
+        source: props.id,
+        target: '',
+    }
     const id = String(getNodes.value.length + 1);
     const numberAnswer = getEdges.value.filter(edge => edge.source === props.id).length + 1;
     const numberQuestion = props.data.title.split(' ')[1]
@@ -43,21 +54,20 @@ const addAnswer = () => {
         text: 'Да',
         licenses: JSON.parse(JSON.stringify(props.data.licenses.length !== 0 ? props.data.licenses : [])) 
     }
-    const edge: Edge = {
-        id: `e${props.id}-${id}`,
-        source: props.id,
-        target: id,
+    if (getNodes.value.some((node:Node) => node.id === id)) {
+        node.id = String(Number.parseInt(getNodes.value[getNodes.value.length - 1].id) + 1)
+        data.title = `Ответ ${numberAnswer + 1} на вопрос ${numberQuestion}`
     }
-    const node: Node = {
-        id,
-        data,
-        type: 'answer',
-        position: { x: Math.random() * dimensions.value.width, y: Math.random() * dimensions.value.height },
-        sourcePosition: Position.Bottom
+    else {
+        node.id = String(getNodes.value.length + 1);
     }
+    node.data = data;
+    edge.id = `e${props.id}-${node.id}`;
+    edge.target = node.id;
     addNodes(node);
     addEdges(edge);
     updateNode();
+    console.log(getNodes.value, 'final')
 }
 
 const getChildrenNodes = (parentId: string) => {
