@@ -25,9 +25,9 @@
 
     <Controls :showFitView="false" position="top-left">
 
-      <!-- <ControlButton title="fullwidth" @click="fullWidth">
+      <ControlButton title="fullwidth" @click="setFullWidth">
         <Icon name="fullwidth"/>
-      </ControlButton> -->
+      </ControlButton>
 
       <ControlButton title="Save json" @click="saveJson">
         <Icon name="save" />
@@ -76,6 +76,7 @@ const nodes = ref<Node[]>(initialNodes)
 
 const edges = ref<Edge[]>(initialEdges)
 const quizId = ref<number>();
+const emits = defineEmits(['fullWidth'])
 
 // our dark mode toggle flag
 const dark = ref<boolean>(false)
@@ -145,30 +146,9 @@ function toggleDarkMode() {
   dark.value = !dark.value
 }
 
-const fullWidth = () => {
-  if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
-                // Вход в полноэкранный режим
-                if (document.documentElement.requestFullscreen) {
-                    document.documentElement.requestFullscreen();
-                } else if (document.documentElement.mozRequestFullScreen) { // Firefox
-                    document.documentElement.mozRequestFullScreen();
-                } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari и Opera
-                    document.documentElement.webkitRequestFullscreen();
-                } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
-                    document.documentElement.msRequestFullscreen();
-                }
-            } else {
-                // Выход из полноэкранного режима
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.mozCancelFullScreen) { // Firefox
-                    document.mozCancelFullScreen();
-                } else if (document.webkitExitFullscreen) { // Chrome, Safari и Opera
-                    document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) { // IE/Edge
-                    document.msExitFullscreen();
-                }
-            }
+const setFullWidth = () => {
+  console.log(123)
+  emits('fullWidth');
 }
 </script>
 
