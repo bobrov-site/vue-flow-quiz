@@ -45,6 +45,7 @@ const addAnswer = () => {
         id: '',
         source: props.id,
         target: '',
+        type: 'step'
     }
     const id = String(getNodes.value.length + 1);
     const numberAnswer = getEdges.value.filter(edge => edge.source === props.id).length + 1;

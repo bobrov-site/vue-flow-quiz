@@ -144,6 +144,7 @@ const addQuestion = () => {
         id: `e${props.id}-${id}`,
         source: props.id,
         target: id,
+        type: 'step'
     }
     const node: Node = {
         id,
@@ -215,6 +216,7 @@ const addResult = () => {
         id: `e${props.id}-${id}`,
         source: props.id,
         target: id,
+        type: 'step'
     }
     const node: Node = {
         id,

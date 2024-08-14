@@ -112,6 +112,7 @@
     flex-direction: column;
     border-radius: 12px;
     padding: 26px;
+    background: white;
 }
 
 .node-license-title {
