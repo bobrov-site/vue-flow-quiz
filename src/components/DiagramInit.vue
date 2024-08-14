@@ -105,25 +105,25 @@ onConnect((connection) => {
   addEdges(connection)
 })
 
-/**
- * To update a node or multiple nodes, you can
- * 1. Mutate the node objects *if* you're using `v-model`
- * 2. Use the `updateNode` method (from `useVueFlow`) to update the node(s)
- * 3. Create a new array of nodes and pass it to the `nodes` ref
- */
+const validateQuiz = ():boolean => {
+  const answersIds = getNodes.value.filter((node: Node) => node.type === 'answer').map((node: Node) => node.id);
+  const sourses = getEdges.value.map((edge: Edge) => edge.source);
+  const map = answersIds.map((id: string) => sourses.includes(id));
+  if (map.includes(false)) {
+    return false
+  }
+  return true
+}
 const saveJson = async() => {
-  // const quiz = {
-  //   quiz: toObject()
-  // }
-  // const json = JSON.stringify(toObject());
-  console.log(quizId.value)
+  if (!validateQuiz()) {
+    toast.error('Ошибка. Не сохранено. Проверьте правильность заполнения конструктора');
+    return
+  }
   try {
     await api.saveJson(toObject(), quizId.value);
     toast.success('Сохранено');
   }
   catch (e) {
-    console.log(e)
-    console.log(12344)
     toast.error('Ошибка. Не сохранено');
   }
 }
