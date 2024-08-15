@@ -201,7 +201,7 @@ const addResult = () => {
     if (isHaveChildren()) {
         return
     }
-    const id = String(getNodes.value.length + 1);
+    const id = utils.generateNodeId(getNodes.value);
     const currentNode = getNodes.value.find(node => node.id === props.id)
     const childrenEdges = getEdges.value.filter((edge) => edge.source === props.id)
     const childrenNodes = getNodes.value.filter((node) => childrenEdges.some((edge) => edge.target === node.id))
