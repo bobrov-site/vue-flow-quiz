@@ -49,12 +49,7 @@ const addAnswer = () => {
         type: 'step'
     }
     const id = utils.generateNodeId(getNodes.value);
-    const childrenEdges = getEdges.value.filter(edge => edge.source === props.id);
-    const childrenAnswers = getNodes.value.filter(node => childrenEdges.some(edge => edge.target === node.id));
-    let numberAnswer = 1;
-    if (childrenAnswers.length !== 0) {
-        numberAnswer = Number.parseInt(childrenAnswers[childrenAnswers.length - 1].data.title.split(' ')[1]) + 1
-    }
+    const numberAnswer = utils.generateNumberAnswer(getNodes.value, getEdges.value, props.id);
     const numberQuestion = props.data.title.split(' ')[1]
     const data = {
         title: `Ответ ${numberAnswer} на вопрос ${numberQuestion}`,
