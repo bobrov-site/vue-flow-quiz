@@ -16,6 +16,7 @@ import { onMounted, ref } from 'vue';
 import { useVueFlow, Position, useNode } from '@vue-flow/core'
 import type { Edge, Node, NodeProps } from '@vue-flow/core'
 import Icon from '@/components/icons/Icon.vue';
+import utils from '@/utils';
 
 const props = defineProps<NodeProps>()
 const text = ref<string>('');
@@ -47,28 +48,27 @@ const addAnswer = () => {
         target: '',
         type: 'step'
     }
-    const id = String(getNodes.value.length + 1);
-    const numberAnswer = getEdges.value.filter(edge => edge.source === props.id).length + 1;
+    const id = utils.generateNodeId(getNodes.value);
+    const childrenEdges = getEdges.value.filter(edge => edge.source === props.id);
+    const childrenAnswers = getNodes.value.filter(node => childrenEdges.some(edge => edge.target === node.id));
+    let numberAnswer = 1;
+    if (childrenAnswers.length !== 0) {
+        numberAnswer = Number.parseInt(childrenAnswers[childrenAnswers.length - 1].data.title.split(' ')[1]) + 1
+    }
     const numberQuestion = props.data.title.split(' ')[1]
     const data = {
         title: `Ответ ${numberAnswer} на вопрос ${numberQuestion}`,
         text: 'Да',
         licenses: JSON.parse(JSON.stringify(props.data.licenses.length !== 0 ? props.data.licenses : [])) 
     }
-    if (getNodes.value.some((node:Node) => node.id === id)) {
-        node.id = String(Number.parseInt(getNodes.value[getNodes.value.length - 1].id) + 1)
-        data.title = `Ответ ${numberAnswer + 1} на вопрос ${numberQuestion}`
-    }
-    else {
-        node.id = String(getNodes.value.length + 1);
-    }
+    node.id = id;
     node.data = data;
     edge.id = `e${props.id}-${node.id}`;
     edge.target = node.id;
     addNodes(node);
     addEdges(edge);
     updateNode();
-    console.log(getNodes.value, 'final')
+    console.log(getNodes.value, 'final after question')
 }
 
 const getChildrenNodes = (parentId: string) => {
