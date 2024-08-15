@@ -199,8 +199,9 @@ const calculateTotalLicencesWeight = (nodeId:string, currentNode) => {
         allLicenses.push(...licensesCopy);
     })
     const uniqueObjects = allLicenses.filter((obj, index, self) =>
-    index === self.findIndex((t) => t.id === obj.id)
+    index === self.findIndex((t) => t.name === obj.name)
     );
+    console.log(allLicenses)
     const result = uniqueObjects.map((license) => {
         let weight = 0;
         allLicenses.forEach((l) => {
@@ -211,6 +212,7 @@ const calculateTotalLicencesWeight = (nodeId:string, currentNode) => {
         license.weight = String(weight);
         return license
     })
+    console.log(result)
     resultLicenses.value = result.filter((license) => license.weight !== 'NaN');
 }
 const addResult = () => {
