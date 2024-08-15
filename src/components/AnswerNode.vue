@@ -39,6 +39,7 @@ import type { NodeProps, Edge, Node } from '@vue-flow/core';
 import type { License } from '../types.ts';
 import api from '../api';
 import Icon from '@/components/icons/Icon.vue';
+import utils from '@/utils.js';
 
 const { getNodes, getEdges, addNodes, addEdges, dimensions, removeNodes } = useVueFlow();
 const text = ref<string>('');
@@ -127,8 +128,8 @@ const addQuestion = () => {
     if (isHaveResult()) {
         return
     }
-    const id = String(getNodes.value.length + 1);
-    const numberQuestion = getNodes.value.filter(node => node.type === 'question').length + 1;
+    const id = utils.generateNodeId(getNodes.value);
+    const numberQuestion = utils.generateNumberQuestion(getNodes.value, getEdges.value, props.id);
     const childrenEdges = getEdges.value.filter((edge) => edge.source === props.id)
     const childrenNodes = getNodes.value.filter((node) => childrenEdges.some((edge) => edge.target === node.id))
     if (childrenNodes.some((node) => node.type === 'question')) {
@@ -156,6 +157,7 @@ const addQuestion = () => {
     addNodes(node);
     addEdges(edge);
     updateNode();
+    console.log(getNodes.value, 'final after answer add question')
 }
 
 const calculateTotalLicencesWeight = (nodeId:string, currentNode) => {
