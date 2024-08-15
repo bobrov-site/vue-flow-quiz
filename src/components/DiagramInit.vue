@@ -42,9 +42,9 @@
         <Icon v-else name="moon" />
       </ControlButton> -->
 
-      <ControlButton title="Log `toObject`" @click="logToObject">
+      <!-- <ControlButton title="Log `toObject`" @click="logToObject">
         <Icon name="log" />
-      </ControlButton>
+      </ControlButton> -->
     </Controls>
   </VueFlow>
 </template>
