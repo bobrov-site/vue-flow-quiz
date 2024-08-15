@@ -15,10 +15,10 @@
         </div>
         <div class="node-licenses-list">
             <div v-for="license in selectedLicenses" :key="license.id" class="node-license-item">
-                <select :disabled="isHaveChildren()" v-model="license.name" class="node-license-select">
+                <select @change="updateLicense(license)" :disabled="isHaveChildren()" v-model="license.name" class="node-license-select">
                     <option v-for="item in licenses" :key="item.id" :value="item.name" :disabled="isDisabled(item)">{{ item.name}}</option>
                 </select>
-                <select :disabled="isHaveChildren()" v-model="license.weight" class="node-license-select">
+                <select @change="updateLicense(license)" :disabled="isHaveChildren()" v-model="license.weight" class="node-license-select">
                     <option value="1">1</option>
                     <option value="0">0</option>
                     <option value="null">Исключить</option>
@@ -62,6 +62,15 @@ const updateNode = () => {
         licenses: selectedLicenses.value,
         text: text.value,
     }
+}
+
+const updateLicense = (license:License) => {
+    selectedLicenses.value = selectedLicenses.value.map((item) => {
+        if (item.name === license.name) {
+            item.weight = license.weight
+        }
+        return item
+    }) 
 }
 
 const fetchLicenses = async() => {
