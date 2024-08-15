@@ -36,7 +36,7 @@
 import {onMounted, ref, shallowRef} from 'vue';
 import { useVueFlow, Position, useNode } from '@vue-flow/core'
 import type { NodeProps, Edge, Node } from '@vue-flow/core';
-import type { License } from '../types.ts';
+import type { License, NodePositionData } from '../types.ts';
 import api from '../api';
 import Icon from '@/components/icons/Icon.vue';
 import utils from '@/utils.js';
@@ -128,6 +128,13 @@ const addQuestion = () => {
     if (isHaveResult()) {
         return
     }
+    const positionData: NodePositionData = {
+        nodeId: props.id,
+        type: 'answer',
+        nodePosition: props.position,
+        nodes: getNodes.value,
+        edges: getEdges.value,
+    }
     const id = utils.generateNodeId(getNodes.value);
     const numberQuestion = utils.generateNumberQuestion(getNodes.value, getEdges.value, props.id);
     const childrenEdges = getEdges.value.filter((edge) => edge.source === props.id)
@@ -151,7 +158,7 @@ const addQuestion = () => {
         id,
         data,
         type: 'question',
-        position: { x: Math.random() * dimensions.value.width, y: Math.random() * dimensions.value.height },
+        position: utils.generateNodePosition(positionData),
         sourcePosition: Position.Bottom
     }
     addNodes(node);
@@ -201,6 +208,13 @@ const addResult = () => {
     if (isHaveChildren()) {
         return
     }
+    const positionData: NodePositionData = {
+        nodeId: props.id,
+        type: 'answer',
+        nodePosition: props.position,
+        nodes: getNodes.value,
+        edges: getEdges.value,
+    }
     const id = utils.generateNodeId(getNodes.value);
     const currentNode = getNodes.value.find(node => node.id === props.id)
     const childrenEdges = getEdges.value.filter((edge) => edge.source === props.id)
@@ -224,7 +238,7 @@ const addResult = () => {
         id,
         data,
         type: 'result',
-        position: { x: Math.random() * dimensions.value.width, y: Math.random() * dimensions.value.height },
+        position: utils.generateNodePosition(positionData),
         sourcePosition: Position.Bottom
     }
     addNodes(node);

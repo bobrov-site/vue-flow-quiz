@@ -13,10 +13,11 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { useVueFlow, Position, useNode } from '@vue-flow/core'
+import { useVueFlow, useNode } from '@vue-flow/core'
 import type { Edge, Node, NodeProps } from '@vue-flow/core'
 import Icon from '@/components/icons/Icon.vue';
 import utils from '@/utils';
+import type { NodePositionData } from '@/types';
 
 const props = defineProps<NodeProps>()
 const text = ref<string>('');
@@ -36,11 +37,18 @@ const updateNode = () => {
     }
 }
 const addAnswer = () => {
+    const positionData: NodePositionData = {
+        nodeId: props.id,
+        type: 'answer',
+        nodePosition: props.position,
+        nodes: getNodes.value,
+        edges: getEdges.value,
+    }
+    const position = utils.generateNodePosition(positionData);
     const node: Node = {
         id: '',
         type: 'answer',
-        position: { x: Math.random() * dimensions.value.width, y: Math.random() * dimensions.value.height },
-        sourcePosition: Position.Bottom
+        position,
     }
     const edge: Edge = {
         id: '',
