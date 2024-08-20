@@ -15,14 +15,20 @@ const fetchLicenses = async() => {
         return response.data;
     }
     catch(e) {
-        console.log(e, 'ploho');
+        throw new Error(e);
     }
     
 }
 
 const fetchNodes = async() => {
-    const response = await axiosInstance.get(routes.quiz, { headers })
-    return response.data
+    try {
+        const response = await axiosInstance.get(routes.quiz, { headers })
+        return response.data
+    }
+    catch (e) {
+        throw new Error(e);
+    }
+    
 }
 
 const saveJson = async(json, id:number) => {
@@ -45,7 +51,6 @@ const api = {
     fetchLicenses,
     saveJson,
     fetchNodes,
-    welcome,
 }
 
 export default api
