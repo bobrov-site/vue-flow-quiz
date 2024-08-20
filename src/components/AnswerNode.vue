@@ -40,6 +40,7 @@ import type { License, NodePositionData } from '../types.ts';
 import api from '../api';
 import Icon from '@/components/icons/Icon.vue';
 import utils from '@/utils.js';
+import { toast } from 'vue3-toastify';
 
 const { getNodes, getEdges, addNodes, addEdges, dimensions, removeNodes } = useVueFlow();
 const text = ref<string>('');
@@ -74,27 +75,57 @@ const updateLicense = (license:License) => {
 }
 
 const fetchLicenses = async() => {
-    // TODO надо вынести отдельно и сократить количество запросов
-    process.value = 'loading';
-    const response = await api.fetchLicenses();
-    licenses.value = response.map((licence: License) => {
-        const newLicense = {
-            id: licence.id,
-            name: licence.name,
-            weight: '0'
+    try {
+        process.value = 'loading';
+        const response = await api.fetchLicenses();
+        licenses.value = response.map((licence: License) => {
+            const newLicense = {
+                id: licence.id,
+                name: licence.name,
+                weight: '0'
+            }
+            return newLicense;
+        })
+        //
+        if (props.data.licenses.length !== 0) {
+            selectedLicenses.value = [...node.data.licenses]
+            disabledLicenses.value = [...node.data.licenses];
         }
-        return newLicense;
-    })
-    //
-    if (props.data.licenses.length !== 0) {
-        selectedLicenses.value = [...node.data.licenses]
-        disabledLicenses.value = [...node.data.licenses];
+        else {
+            selectedLicenses.value.push(licenses.value[0])
+        }
     }
-    else {
-        selectedLicenses.value.push(licenses.value[0])
+    catch (e) {
+        process.value = 'loading'
+        licenses.value = [
+            {
+                id: 1,
+                name: 'Лицензия 1',
+                weight: '0'
+            },
+            {
+                id: 2,
+                name: 'Лицензия 2',
+                weight: '0'
+            },
+            {
+                id: 3,
+                name: 'Лицензия 3',
+                weight: '0'
+            }
+        ]
+        if (props.data.licenses.length !== 0) {
+            selectedLicenses.value = [...node.data.licenses]
+            disabledLicenses.value = [...node.data.licenses];
+        }
+        else {
+            selectedLicenses.value.push(licenses.value[0])
+        }
     }
-    // node.data.licenses = selectedLicenses.value
-    process.value = 'loaded';
+    finally {
+        process.value = 'loaded';
+        toast.warn('Добавлены фейковые лицензии для дебага. Пожалуйста не сохраняйте результат')
+    }
 }
 
 const isDisabled = (license: License): boolean => {
