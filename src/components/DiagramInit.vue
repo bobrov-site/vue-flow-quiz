@@ -89,11 +89,19 @@ const dark = ref<boolean>(false)
  */
 onInit(async(vueFlowInstance) => {
   // instance is the same as the return of `useVueFlow`
-  const {quiz, id} = await api.fetchNodes();
-  quizId.value = id;
-  if (quiz) {
-    console.log(quiz.quiz)
-    fromObject(quiz.quiz);
+  try {
+    const {quiz, id} = await api.fetchNodes();
+    quizId.value = id;
+    if (quiz) {
+      console.log(quiz.quiz)
+      fromObject(quiz.quiz);
+    }
+  }
+  catch (e) {
+    quizId.value = 0;
+    toast.error(e.message)
+    toast.warn('Нет данных, cозданы фейковые');
+    fromObject(initialNodes);
   }
 })
 
