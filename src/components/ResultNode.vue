@@ -1,6 +1,11 @@
 <template>
     <div class="node-result node">
-        <h4 class="node-title">Результат</h4>
+        <div class="node-header">
+            <h4 class="node-title">Результат</h4>
+            <div @click="deleteNodes" class="node-trash-icon">
+                <Icon name="delete"/>
+            </div>
+        </div>
         <input @change="updateNode" v-model="text" class="node-input" placeholder="Текст результата" type="text"/>
         <div class="node-licenses-wrapper">
             <div class="node-license-header">
@@ -19,13 +24,16 @@
 
 <script setup lang="ts">
 import {onMounted, ref} from 'vue';
-import { useNode } from '@vue-flow/core';
-import type { NodeProps } from '@vue-flow/core';
+import { useNode, useVueFlow } from '@vue-flow/core';
+import type { NodeProps, Edge, Node } from '@vue-flow/core';
+import Icon from '@/components/icons/Icon.vue';
 import type { License } from '@/types';
 const props = defineProps<NodeProps>()
 const licenses = ref<License[] | []>()
 const text = ref<string>('');
 const { node: currentNode } = useNode()
+const { getNodes, getEdges, addNodes, addEdges, dimensions, removeNodes } = useVueFlow();
+const chilrenNodesIds = ref<string[]>([])
 onMounted(() => {
     text.value = props.data.text;
     licenses.value = props.data.licenses;
@@ -35,6 +43,22 @@ const updateNode = () => {
         licenses: currentNode.data.licenses,
         text: text.value,
     }
+}
+
+const deleteNodes = () => {
+    chilrenNodesIds.value.push(props.id);
+    getChildrenNodes(props.id)
+    removeNodes(chilrenNodesIds.value)
+}
+
+const getChildrenNodes = (parentId: string) => {
+    const targetEdges = getEdges.value.filter((edge:Edge) => edge.source === parentId)
+    if (targetEdges) {
+        const targetIds = targetEdges.map((edge:Edge) => edge.target);
+        chilrenNodesIds.value.push(...targetIds);
+        targetIds.forEach((id: string) => getChildrenNodes(id))
+    }
+    return
 }
 </script>
 

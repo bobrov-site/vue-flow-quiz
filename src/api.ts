@@ -1,7 +1,5 @@
 import routes from "./routes"
 import axios from "axios";
-import { CookieJar } from "tough-cookie";
-import { wrapper } from "axios-cookiejar-support";
 
 const headers = {
     'Content-Type': 'application/json',
@@ -9,19 +7,17 @@ const headers = {
     'Access-Control-Allow-Origin': '*'
 }
 
-const jar = new CookieJar();
-
-const axiosInstance = wrapper(axios.create({jar, headers, baseURL: routes.baseUrl}))
-
-
-const welcome = async() => {
-    const response = await axiosInstance.post(routes.welcome, {}, { headers });
-    return response.data;
-}
+const axiosInstance = axios.create({headers, baseURL: routes.baseUrl})
 
 const fetchLicenses = async() => {
-    const response = await axiosInstance.get(routes.licensesDictionary, { headers })
-    return response.data;
+    try {
+        const response = await axiosInstance.get(routes.licensesDictionary, { headers })
+        return response.data;
+    }
+    catch(e) {
+        console.log(e, 'ploho');
+    }
+    
 }
 
 const fetchNodes = async() => {
