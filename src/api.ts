@@ -1,5 +1,7 @@
 import routes from "./routes"
 import axios from "axios";
+import { CookieJar } from "tough-cookie";
+import { wrapper } from "axios-cookiejar-support";
 
 const headers = {
     'Content-Type': 'application/json',
@@ -7,9 +9,15 @@ const headers = {
     'Access-Control-Allow-Origin': '*'
 }
 
-const axiosInstance = axios.create({
-    baseURL: routes.baseUrl
-})
+const jar = new CookieJar();
+
+const axiosInstance = wrapper(axios.create({jar, headers, baseURL: routes.baseUrl}))
+
+
+const welcome = async() => {
+    const response = await axiosInstance.post(routes.welcome, {}, { headers });
+    return response.data;
+}
 
 const fetchLicenses = async() => {
     const response = await axiosInstance.get(routes.licensesDictionary, { headers })
@@ -41,6 +49,7 @@ const api = {
     fetchLicenses,
     saveJson,
     fetchNodes,
+    welcome,
 }
 
 export default api
