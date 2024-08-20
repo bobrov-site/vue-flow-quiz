@@ -71,7 +71,7 @@ const updateLicense = (license:License) => {
             item.weight = license.weight
         }
         return item
-    }) 
+    })
 }
 
 const fetchLicenses = async() => {
@@ -114,6 +114,7 @@ const fetchLicenses = async() => {
                 weight: '0'
             }
         ]
+        toast.warn('Добавлены фейковые лицензии для дебага. Пожалуйста не сохраняйте результат')
         if (props.data.licenses.length !== 0) {
             selectedLicenses.value = [...node.data.licenses]
             disabledLicenses.value = [...node.data.licenses];
@@ -124,7 +125,6 @@ const fetchLicenses = async() => {
     }
     finally {
         process.value = 'loaded';
-        toast.warn('Добавлены фейковые лицензии для дебага. Пожалуйста не сохраняйте результат')
     }
 }
 
