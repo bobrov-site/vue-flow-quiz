@@ -14,16 +14,17 @@
             </div>
         </div>
         <div class="node-licenses-list">
-            <div v-for="license in selectedLicenses" :key="license.id" class="node-license-item">
-                <select @change="updateLicense(license)" :disabled="isHaveChildren()" v-model="license.name" class="node-license-select">
-                    <option v-for="item in licenses" :key="item.id" :value="item.name" :disabled="isDisabled(item)">{{ item.name}}</option>
-                </select>
-                <select @change="updateLicense(license)" :disabled="isHaveChildren()" v-model="license.weight" class="node-license-select">
-                    <option value="1">1</option>
-                    <option value="0">0</option>
-                    <option value="null">Исключить</option>
-                </select>
-            </div>
+            <LicenseSelectItem 
+            v-for="(license,index) in selectedLicenses" 
+            :key="license.id"
+            :license="license"
+            :licenses="licenses"
+            :disabledLicenses="disabledLicenses"
+            :nodeId="props.id"
+            :index="index"
+            @updateLicense="updateLicense"
+            @updateLicenseWeight="updateLicenseWeight"
+            />
         </div>
         <button @click="addLicense" class="node-button" type="button" :disabled="process === 'loading'">+ Добавить лицензию</button>
         <hr class="node-hr">
@@ -41,14 +42,15 @@ import api from '../api';
 import Icon from '@/components/icons/Icon.vue';
 import utils from '@/utils.js';
 import { toast } from 'vue3-toastify';
+import LicenseSelectItem from './LicenseSelectItem.vue';
 
 const { getNodes, getEdges, addNodes, addEdges, dimensions, removeNodes } = useVueFlow();
 const text = ref<string>('');
 const props = defineProps<NodeProps>()
-const licenses = shallowRef<License[] | []>()
+const licenses = ref<License[] | []>()
 const resultLicenses = shallowRef<License[] | []>()
 const selectedLicenses = shallowRef<License[]>([]);
-const disabledLicenses = ref<License[]>([]);
+const disabledLicenses = shallowRef<License[]>([]);
 const chilrenNodesIds = ref<string[]>([])
 const process = ref('');
 const { node } = useNode();
@@ -65,13 +67,15 @@ const updateNode = () => {
     }
 }
 
-const updateLicense = (license:License) => {
-    selectedLicenses.value = selectedLicenses.value.map((item) => {
-        if (item.name === license.name) {
-            item.weight = license.weight
-        }
-        return item
-    })
+const updateLicense = (licenseId:number, index:number) => {
+    selectedLicenses.value[index] = licenses.value?.find((license) => license.id === licenseId)
+}
+
+const updateLicenseWeight = (licenseId:number, weight: string, index:number) => {
+    const license = selectedLicenses.value.find((license) => license.id === licenseId);
+    if (license) {
+        license.weight = weight;
+    }
 }
 
 const fetchLicenses = async() => {
@@ -96,8 +100,7 @@ const fetchLicenses = async() => {
         }
     }
     catch (e) {
-        process.value = 'loading'
-        licenses.value = [
+        const fakeLicenses: License[] = [
             {
                 id: 1,
                 name: 'Лицензия 1',
@@ -114,6 +117,7 @@ const fetchLicenses = async() => {
                 weight: '0'
             }
         ]
+        licenses.value = fakeLicenses;
         toast.warn('Добавлены фейковые лицензии для дебага. Пожалуйста не сохраняйте результат')
         if (props.data.licenses.length !== 0) {
             selectedLicenses.value = [...node.data.licenses]
@@ -154,13 +158,20 @@ const addLicense = () => {
     if (isHaveChildren()) {
         return
     }
-    disabledLicenses.value.push(selectedLicenses.value[selectedLicenses.value.length - 1])
-    const selectedLicensesNames = selectedLicenses.value.map((item) => item.name)
-    const newLicense = licenses.value?.filter((item) => !selectedLicensesNames.includes(item.name))[0]
-    if (!newLicense) {
-     return   
+    disabledLicenses.value.push(selectedLicenses.value[selectedLicenses.value.length - 1]);
+    const disabledIds = disabledLicenses.value.map((license) => license.id);
+    const licensesIds = licenses.value?.map((license) => license.id);
+    const filtredIds = licensesIds?.filter((id) => !disabledIds.includes(id));
+    
+    // Find the last license that is not disabled
+    const availableLicenses = licenses.value?.filter((license) => !disabledIds.includes(license.id));
+    const setNewLicense = availableLicenses[availableLicenses.length - 1];
+    
+    if (!setNewLicense) {
+        return;
     }
-    selectedLicenses.value.push(newLicense);
+    console.log(setNewLicense.id, 'newLicenseId')
+    selectedLicenses.value.push(setNewLicense);
     updateNode();
 }
 
