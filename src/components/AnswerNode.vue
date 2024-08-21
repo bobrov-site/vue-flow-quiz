@@ -15,7 +15,7 @@
         </div>
         <div class="node-licenses-list">
             <div v-for="license in selectedLicenses" :key="license.id" class="node-license-item">
-                <select @change="updateLicense(license)" :disabled="isHaveChildren()" v-model="license.name" class="node-license-select">
+                <select @change="updateLicense(license)" disabled v-model="license.name" class="node-license-select">
                     <option v-for="item in licenses" :key="item.id" :value="item.name" :disabled="isDisabled(item)">{{ item.name}}</option>
                 </select>
                 <select @change="updateLicense(license)" :disabled="isHaveChildren()" v-model="license.weight" class="node-license-select">
@@ -87,7 +87,7 @@ const fetchLicenses = async() => {
     })
     //
     if (props.data.licenses.length !== 0) {
-        selectedLicenses.value = [...node.data.licenses]
+        selectedLicenses.value = node.data.licenses.filter((license:License) => license.weight !== 'null');
         disabledLicenses.value = [...node.data.licenses];
     }
     else {
@@ -119,17 +119,42 @@ const isHaveResult = ():boolean => {
     return haveResult
 }
 
+const getParentLicenses = (nodeId: string): License[] => {
+    const parentEdges = getEdges.value.filter((edge) => edge.target === nodeId);
+    let parentLicenses: License[] = [];
+
+    parentEdges.forEach((edge) => {
+        const parentNode = getNodes.value.find((node) => node.id === edge.source);
+        if (parentNode && parentNode.data.licenses) {
+            parentLicenses = parentLicenses.concat(parentNode.data.licenses);
+        }
+    });
+
+    return parentLicenses;
+};
+
+
 const addLicense = () => {
     if (isHaveChildren()) {
         return
     }
-    disabledLicenses.value.push(selectedLicenses.value[selectedLicenses.value.length - 1])
-    const selectedLicensesNames = selectedLicenses.value.map((item) => item.name)
-    const newLicense = licenses.value?.filter((item) => !selectedLicensesNames.includes(item.name))[0]
-    if (!newLicense) {
-     return   
+    const parentLicenses = getParentLicenses(props.id);
+    const newLicenses = licenses.value?.filter((license) => {
+        const names = selectedLicenses.value.map((selectedLicense) => selectedLicense.name);
+        const parentLicenseWithNullWeight = parentLicenses.find((parentLicense) => parentLicense.name === license.name && parentLicense.weight === 'null');
+        if (names.includes(license.name) || license.weight === 'null' || parentLicenseWithNullWeight) {
+            return false
+        }
+        else {
+            return true
+        }
+        
+    })
+    console.log(newLicenses)
+    if (newLicenses?.length === 0) {
+        return
     }
-    selectedLicenses.value.push(newLicense);
+    selectedLicenses.value.push(...newLicenses);
     updateNode();
 }
 
