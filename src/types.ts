@@ -19,4 +19,12 @@ export interface NodePositionData {
     edges: Edge[],
 }
 
+export interface LicenseSelectItem {
+    license: License,
+    licenses: License[],
+    disabledLicenses: License[] | [],
+    nodeId: string,
+    index: number,
+}
+
 export type NodeType = 'question' | 'answer' | 'result'
