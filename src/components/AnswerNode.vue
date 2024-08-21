@@ -18,7 +18,7 @@
                 <select @change="updateLicense(license)" disabled v-model="license.name" class="node-license-select">
                     <option v-for="item in licenses" :key="item.id" :value="item.name" :disabled="isDisabled(item)">{{ item.name}}</option>
                 </select>
-                <select @change="updateLicense(license)" :disabled="isHaveChildren()" v-model="license.weight" class="node-license-select">
+                <select @change="updateLicense(license)" :disabled="isHaveChildrenSelect(license)" v-model="license.weight" :class="{'node-license-select-disabled': isHaveChildrenSelect(license)}" class="node-license-select">
                     <option value="1">1</option>
                     <option value="0">0</option>
                     <option value="null">Исключить</option>
@@ -87,7 +87,7 @@ const fetchLicenses = async() => {
     })
     //
     if (props.data.licenses.length !== 0) {
-        selectedLicenses.value = node.data.licenses.filter((license:License) => license.weight !== 'null');
+        selectedLicenses.value = node.data.licenses;
         disabledLicenses.value = [...node.data.licenses];
     }
     else {
@@ -99,6 +99,17 @@ const fetchLicenses = async() => {
 
 const isDisabled = (license: License): boolean => {
     return disabledLicenses.value.some((item) => item.name === license.name)
+}
+
+const isHaveChildrenSelect = (license: License) => {
+    const childrenEdges = getEdges.value.find((edge) => edge.source === props.id)
+    if (childrenEdges) {
+        return true
+    }
+    else if (license.weight === 'null') {
+        return true
+    }
+    return false
 }
 
 const isHaveChildren = ():boolean => {

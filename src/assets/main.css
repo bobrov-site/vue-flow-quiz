@@ -85,3 +85,7 @@ body,
 .basic-flow.dark .vue-flow__edge-text {
     fill:#fffffb
 }
+
+.node-license-select-disabled {
+    color: #d9d9d9;
+}
