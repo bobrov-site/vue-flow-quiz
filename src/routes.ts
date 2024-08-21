@@ -1,4 +1,4 @@
-const domain = 'https://choosealicense.dev.rusrobots.ru'; //YOUR DOMAIN
+const domain = 'https://choosealicense.ru'; //YOUR DOMAIN
 
 const routes = {
     baseUrl: `${domain}/api`,
