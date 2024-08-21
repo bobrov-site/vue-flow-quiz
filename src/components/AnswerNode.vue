@@ -91,7 +91,7 @@ const fetchLicenses = async() => {
         disabledLicenses.value = [...node.data.licenses];
     }
     else {
-        selectedLicenses.value.push(licenses.value[0])
+        selectedLicenses.value.push(...licenses.value)
     }
     // node.data.licenses = selectedLicenses.value
     process.value = 'loaded';
