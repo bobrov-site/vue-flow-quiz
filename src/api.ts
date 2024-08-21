@@ -45,7 +45,6 @@ const api = {
     fetchLicenses,
     saveJson,
     fetchNodes,
-    welcome,
 }
 
 export default api
