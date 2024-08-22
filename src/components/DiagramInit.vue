@@ -1,7 +1,5 @@
 <template>
       <VueFlow
-    :nodes="nodes"
-    :edges="edges"
     :class="{ dark }"
     class="basic-flow"
     :default-viewport="{ zoom: 1.5 }"
@@ -72,9 +70,6 @@ import 'vue3-toastify/dist/index.css';
  */
 const { onInit, onConnect, addEdges, toObject, fromObject, getNodes, getEdges, removeNodes, removeEdges, vueFlowRef } = useVueFlow()
 
-const nodes = ref<Node[]>(initialNodes)
-
-const edges = ref<Edge[]>(initialEdges)
 const quizId = ref<number>();
 const emits = defineEmits(['fullWidth'])
 
