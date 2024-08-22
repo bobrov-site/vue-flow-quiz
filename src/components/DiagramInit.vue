@@ -1,5 +1,7 @@
 <template>
       <VueFlow
+    :nodes="nodes"
+    :edges="edges"
     :class="{ dark }"
     class="basic-flow"
     :default-viewport="{ zoom: 1.5 }"
@@ -70,6 +72,9 @@ import 'vue3-toastify/dist/index.css';
  */
 const { onInit, onConnect, addEdges, toObject, fromObject, getNodes, getEdges, removeNodes, removeEdges, vueFlowRef } = useVueFlow()
 
+const nodes = ref<Node[]>()
+
+const edges = ref<Edge[]>(initialEdges)
 const quizId = ref<number>();
 const emits = defineEmits(['fullWidth'])
 
@@ -86,10 +91,11 @@ onInit(async(vueFlowInstance) => {
   // instance is the same as the return of `useVueFlow`
   const {quiz, id} = await api.fetchNodes();
   quizId.value = id;
-  if (quiz) {
+  if (quiz && quiz.quiz.nodes.length !== 1) {
     console.log(quiz.quiz)
     fromObject(quiz.quiz);
   }
+  nodes.value = initialNodes;
 })
 
 /**
