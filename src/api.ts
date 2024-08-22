@@ -15,7 +15,7 @@ const fetchLicenses = async() => {
         return response.data;
     }
     catch(e) {
-        console.log(e, 'ploho');
+        console.log(e, 'licenses not downloaded');
     }
     
 }
