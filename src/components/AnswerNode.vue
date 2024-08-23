@@ -15,8 +15,8 @@
         </div>
         <div class="node-licenses-list">
             <div v-for="license in selectedLicenses" :key="license.id" class="node-license-item">
-                <select @change="updateLicense(license)" disabled v-model="license.name" class="node-license-select">
-                    <option v-for="item in licenses" :key="item.id" :value="item.name" :disabled="isDisabled(item)">{{ item.name}}</option>
+                <select @change="updateLicense(license)" disabled v-model="license.id" class="node-license-select">
+                    <option v-for="item in licenses" :key="item.id" :value="item.id" :disabled="isDisabled(item)">{{ item.name}}</option>
                 </select>
                 <select @change="updateLicense(license)" :disabled="isHaveChildrenSelect(license)" v-model="license.weight" :class="{'node-license-select-disabled': isHaveChildrenSelect(license)}" class="node-license-select">
                     <option value="1">1</option>
