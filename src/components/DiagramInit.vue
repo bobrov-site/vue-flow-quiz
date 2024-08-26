@@ -37,14 +37,9 @@
         <Icon name="delete"/>
       </ControlButton>
 
-      <!-- <ControlButton title="Toggle Dark Mode" @click="toggleDarkMode">
-        <Icon v-if="dark" name="sun" />
-        <Icon v-else name="moon" />
-      </ControlButton> -->
-
-      <!-- <ControlButton title="Log `toObject`" @click="logToObject">
+      <ControlButton v-if="utils.isCurrentUrlDev(currentUrl)" title="Log `toObject`" @click="logToObject">
         <Icon name="log" />
-      </ControlButton> -->
+      </ControlButton>
     </Controls>
   </VueFlow>
 </template>
@@ -64,6 +59,7 @@ import ResultNode from './ResultNode.vue'
 import api from '@/api.js'
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
+import utils from '@/utils.js'
 /**
  * `useVueFlow` provides:
  * 1. a set of methods to interact with the VueFlow instance (like `fitView`, `setViewport`, `addEdges`, etc)
@@ -80,6 +76,7 @@ const emits = defineEmits(['fullWidth'])
 
 // our dark mode toggle flag
 const dark = ref<boolean>(false)
+const currentUrl = window.location.href
 
 /**
  * This is a Vue Flow event-hook which can be listened to from anywhere you call the composable, instead of only on the main component
