@@ -37,11 +37,10 @@ import {onMounted, ref, shallowRef} from 'vue';
 import { useVueFlow, Position, useNode } from '@vue-flow/core'
 import type { NodeProps, Edge, Node } from '@vue-flow/core';
 import type { License, NodePositionData } from '../types.ts';
-import api from '../api';
 import Icon from '@/components/icons/Icon.vue';
 import utils from '@/utils.js';
 
-const { getNodes, getEdges, addNodes, addEdges, dimensions, removeNodes } = useVueFlow();
+const { getNodes, getEdges, addNodes, addEdges, removeNodes } = useVueFlow();
 const text = ref<string>('');
 const props = defineProps<NodeProps>()
 const licenses = shallowRef<License[] | []>()
@@ -74,10 +73,9 @@ const updateLicense = (license:License) => {
 }
 
 const fetchLicenses = async() => {
-    // TODO надо вынести отдельно и сократить количество запросов
+    const dictionary = props.data.dictionary;
     process.value = 'loading';
-    const response = await api.fetchLicenses();
-    licenses.value = response.map((licence: License) => {
+    licenses.value = dictionary.map((licence: License) => {
         const newLicense = {
             id: licence.id,
             name: licence.name,
