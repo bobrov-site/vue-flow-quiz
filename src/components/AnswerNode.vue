@@ -16,7 +16,7 @@
         <div class="node-licenses-list">
             <div v-for="license in selectedLicenses" :key="license.id" class="node-license-item">
                 <select @change="updateLicense(license)" disabled v-model="license.id" class="node-license-select">
-                    <option v-for="item in licenses" :key="item.id" :value="item.id" :disabled="isDisabled(item)">{{ item.name}}</option>
+                    <option v-for="item in licenses" :key="item.id" :value="item.id" :disabled="isDisabled(item)" class="node-license-option">{{ shortName(item.name)}}</option>
                 </select>
                 <select @change="updateLicense(license)" :disabled="isHaveChildrenSelect(license)" v-model="license.weight" :class="{'node-license-select-disabled': isHaveChildrenSelect(license)}" class="node-license-select">
                     <option value="1">1</option>
@@ -55,6 +55,13 @@ onMounted(async() => {
     text.value = props.data.text;
     await fetchLicenses();
 })
+
+const shortName = (name: string) => {
+    if (name.length > 15) {
+        return name.slice(0, 15) + '...'
+    }
+    return name;
+}
 
 const updateNode = () => {
     node.data = {
