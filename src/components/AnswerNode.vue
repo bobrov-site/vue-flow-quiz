@@ -212,10 +212,10 @@ const addQuestion = () => {
     console.log(getNodes.value, 'final after answer add question')
 }
 
-const calculateTotalLicencesWeight = (nodeId:string, currentNode) => {
-    const allLicenses = []
+const calculateTotalLicencesWeight = (nodeId:string, currentNode: Node) => {
+    const allLicenses: License[] = []
     const allNodes = []
-    const parentEdges = []
+    const parentEdges: Edge[] = []
     const getParentsNodes = (id:string) => {
         const parentEdge = getEdges.value.find((edge) => edge.target === id);
         if (parentEdge) {
