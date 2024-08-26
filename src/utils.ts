@@ -51,11 +51,11 @@ const generateNodePosition = (positionData: NodePositionData): NodePosition => {
 
 const isCurrentUrlDev = (currentUrl:string):boolean => {
     switch (currentUrl) {
-        case 'https://choosealicense.dev.rusrobots.ru':
+        case 'https://choosealicense.dev.rusrobots.ru/admin/main-page/quiz':
             return true
         case 'http://localhost:3000/':
             return true
-        case 'https://choosealicense.ru':
+        case 'https://choosealicense.ru/admin/main-page/quiz':
             return false
         default:
             return false
