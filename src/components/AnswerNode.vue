@@ -151,9 +151,9 @@ const addLicense = () => {
     }
     const parentLicenses = getParentLicenses(props.id);
     const newLicenses = licenses.value?.filter((license) => {
-        const names = selectedLicenses.value.map((selectedLicense) => selectedLicense.name);
+        const ids = selectedLicenses.value.map((selectedLicense) => selectedLicense.id);
         const parentLicenseWithNullWeight = parentLicenses.find((parentLicense) => parentLicense.name === license.name && parentLicense.weight === 'null');
-        if (names.includes(license.name) || license.weight === 'null' || parentLicenseWithNullWeight) {
+        if (ids.includes(license.id) || license.weight === 'null' || parentLicenseWithNullWeight) {
             return false
         }
         else {
