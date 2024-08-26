@@ -72,7 +72,6 @@ const addAnswer = () => {
     addNodes(node);
     addEdges(edge);
     updateNode();
-    console.log(getNodes.value, 'final after question')
 }
 
 const getChildrenNodes = (parentId: string) => {

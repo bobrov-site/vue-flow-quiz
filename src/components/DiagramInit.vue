@@ -90,7 +90,6 @@ onInit(async(vueFlowInstance) => {
   const dictionary = await api.fetchLicenses();
   quizId.value = id;
   if (quiz && quiz.quiz.nodes.length !== 1) {
-    console.log(quiz.quiz, 'quiz')
     quiz.quiz.nodes.forEach((node: Node) => {
       node.data.dictionary = dictionary;
     })
@@ -149,7 +148,6 @@ function toggleDarkMode() {
 }
 
 const setFullWidth = () => {
-  console.log(123)
   emits('fullWidth');
 }
 </script>

@@ -32,17 +32,22 @@ const props = defineProps<NodeProps>()
 const licenses = ref<License[] | []>()
 const text = ref<string>('');
 const { node: currentNode } = useNode()
-const { getNodes, getEdges, addNodes, addEdges, dimensions, removeNodes } = useVueFlow();
+const { getEdges, removeNodes } = useVueFlow();
 const chilrenNodesIds = ref<string[]>([])
 onMounted(() => {
     text.value = props.data.text;
     licenses.value = props.data.licenses;
+    console.log(props.data.dictionary, 'dictionary');
 })
 const updateNode = () => {
     currentNode.data = {
         licenses: currentNode.data.licenses,
         text: text.value,
     }
+}
+
+const changeLicensesNames = () => {
+    
 }
 
 const deleteNodes = () => {

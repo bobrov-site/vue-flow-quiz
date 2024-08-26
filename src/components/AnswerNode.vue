@@ -124,7 +124,6 @@ const isHaveResult = ():boolean => {
         const resultsIds = getNodes.value.filter((node: Node) => node.type === 'result').map((node: Node) => node.id);
         return resultsIds.includes(edge.target)
     })
-    console.log(haveResult)
     return haveResult
 }
 
@@ -159,7 +158,6 @@ const addLicense = () => {
         }
         
     })
-    console.log(newLicenses)
     if (newLicenses?.length === 0) {
         return
     }
@@ -185,7 +183,6 @@ const addQuestion = () => {
     if (childrenNodes.some((node) => node.type === 'question')) {
         return
     }
-    console.log(props.data.licenses)
     const data = {
         title: `Вопрос ${numberQuestion}`,
         text: 'Является ли ваше произведение ПО',
@@ -207,7 +204,6 @@ const addQuestion = () => {
     addNodes(node);
     addEdges(edge);
     updateNode();
-    console.log(getNodes.value, 'final after answer add question')
 }
 
 const calculateTotalLicencesWeight = (nodeId:string, currentNode: Node) => {
