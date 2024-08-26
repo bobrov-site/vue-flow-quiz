@@ -62,7 +62,8 @@ const addAnswer = () => {
     const data = {
         title: `Ответ ${numberAnswer} на вопрос ${numberQuestion}`,
         text: 'Да',
-        licenses: JSON.parse(JSON.stringify(props.data.licenses.length !== 0 ? props.data.licenses : [])) 
+        licenses: JSON.parse(JSON.stringify(props.data.licenses.length !== 0 ? props.data.licenses : [])),
+        dictionary: props.data.dictionary
     }
     node.id = id;
     node.data = data;
