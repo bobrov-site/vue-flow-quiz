@@ -49,9 +49,23 @@ const generateNodePosition = (positionData: NodePositionData): NodePosition => {
     return position;
 }
 
+const isCurrentUrlDev = (currentUrl:string):boolean => {
+    switch (currentUrl) {
+        case 'https://choosealicense.dev.rusrobots.ru':
+            return true
+        case 'http://localhost:3000/':
+            return true
+        case 'https://choosealicense.ru':
+            return false
+        default:
+            return false
+    }
+}
+
 export default {
     generateNodeId,
     generateNumberQuestion,
     generateNumberAnswer,
     generateNodePosition,
+    isCurrentUrlDev,
 }

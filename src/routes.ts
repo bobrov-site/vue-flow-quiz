@@ -1,3 +1,5 @@
+import utils from "./utils";
+
 const domain = {
     production: 'https://choosealicense.ru',
     development: 'https://choosealicense.dev.rusrobots.ru',
@@ -12,10 +14,10 @@ const routes = {
     quizId: (id:number) => `/quiz/${id}/update`, 
 }
 
-if (currentUrl === 'https://choosealicense.dev.rusrobots.ru/admin/main-page/quiz' || currentUrl === 'http://localhost:3000/') {
+if (utils.isCurrentUrlDev(currentUrl)) {
     routes.baseUrl = `${domain.development}/api`
 }
-if (currentUrl === 'https://choosealicense.ru/admin/main-page/quiz') {
+else {
     routes.baseUrl = `${domain.production}/api`
 }
 
