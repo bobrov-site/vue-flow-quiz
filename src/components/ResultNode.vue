@@ -28,6 +28,7 @@ import { useNode, useVueFlow } from '@vue-flow/core';
 import type { NodeProps, Edge, Node } from '@vue-flow/core';
 import Icon from '@/components/icons/Icon.vue';
 import type { License } from '@/types';
+import api from '@/api';
 const props = defineProps<NodeProps>()
 const licenses = ref<License[] | []>()
 const text = ref<string>('');
@@ -36,8 +37,7 @@ const { getEdges, removeNodes } = useVueFlow();
 const chilrenNodesIds = ref<string[]>([])
 onMounted(() => {
     text.value = props.data.text;
-    licenses.value = props.data.licenses;
-    console.log(props.data.dictionary, 'dictionary');
+    licenses.value = setLicensesNamesFromDictionary(props.data.licenses);
 })
 const updateNode = () => {
     currentNode.data = {
@@ -46,8 +46,17 @@ const updateNode = () => {
     }
 }
 
-const changeLicensesNames = () => {
-    
+const setLicensesNamesFromDictionary = (licenses: License[]) => {
+    const renamedLicenses = licenses.map((license) => {
+        const resultLicense = {...license};
+        api.dictionary.forEach((item: License) => {
+            if (item.id === license.id) {
+                resultLicense.name = item.name
+            }
+        })
+        return resultLicense;
+    })
+    return renamedLicenses;
 }
 
 const deleteNodes = () => {
