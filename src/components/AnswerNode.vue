@@ -39,6 +39,7 @@ import type { NodeProps, Edge, Node } from '@vue-flow/core';
 import type { License, NodePositionData } from '../types.ts';
 import Icon from '@/components/icons/Icon.vue';
 import utils from '@/utils.js';
+import api from '@/api.js';
 
 const { getNodes, getEdges, addNodes, addEdges, removeNodes } = useVueFlow();
 const text = ref<string>('');
@@ -73,7 +74,7 @@ const updateLicense = (license:License) => {
 }
 
 const fetchLicenses = async() => {
-    const dictionary = props.data.dictionary;
+    const dictionary = api.dictionary;
     process.value = 'loading';
     licenses.value = dictionary.map((licence: License) => {
         const newLicense = {
@@ -186,7 +187,8 @@ const addQuestion = () => {
     const data = {
         title: `Вопрос ${numberQuestion}`,
         text: 'Является ли ваше произведение ПО',
-        licenses: selectedLicenses.value
+        licenses: selectedLicenses.value,
+        dictionary: props.data.dictionary,
     }
     const edge: Edge = {
         id: `e${props.id}-${id}`,
@@ -265,7 +267,8 @@ const addResult = () => {
     calculateTotalLicencesWeight(props.id, currentNode);
     const data = {
         text: 'Пояснительный текст',
-        licenses: resultLicenses.value
+        licenses: resultLicenses.value,
+        dictionary: props.data.dictionary,
     }
     const edge: Edge = {
         id: `e${props.id}-${id}`,

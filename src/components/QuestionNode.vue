@@ -18,6 +18,7 @@ import type { Edge, Node, NodeProps } from '@vue-flow/core'
 import Icon from '@/components/icons/Icon.vue';
 import utils from '@/utils';
 import type { NodePositionData } from '@/types';
+import api from '@/api';
 
 const props = defineProps<NodeProps>()
 const text = ref<string>('');
@@ -34,9 +35,11 @@ const updateNode = () => {
         title: currentNode.data.title,
         licenses: currentNode.data.licenses,
         text: text.value,
+        dictionary: currentNode.data.dictionary
     }
 }
 const addAnswer = () => {
+    const dictionary = api.dictionary;
     const positionData: NodePositionData = {
         nodeId: props.id,
         type: 'answer',
@@ -63,7 +66,7 @@ const addAnswer = () => {
         title: `Ответ ${numberAnswer} на вопрос ${numberQuestion}`,
         text: 'Да',
         licenses: JSON.parse(JSON.stringify(props.data.licenses.length !== 0 ? props.data.licenses : [])),
-        dictionary: props.data.dictionary
+        dictionary
     }
     node.id = id;
     node.data = data;

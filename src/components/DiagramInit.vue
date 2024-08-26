@@ -86,12 +86,12 @@ const currentUrl = window.location.href
  */
 onInit(async(vueFlowInstance) => {
   // instance is the same as the return of `useVueFlow`
+  await api.fetchLicenses();
   const {quiz, id} = await api.fetchNodes();
-  const dictionary = await api.fetchLicenses();
   quizId.value = id;
   if (quiz && quiz.quiz.nodes.length !== 1) {
     quiz.quiz.nodes.forEach((node: Node) => {
-      node.data.dictionary = dictionary;
+      node.data.dictionary = api.dictionary
     })
     fromObject(quiz.quiz);
   }
